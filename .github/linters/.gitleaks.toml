@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Anthropic's public Claude CLI PGP signing-key fingerprint — a public key identifier, not a secret."
+regexes = ['''31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE''']

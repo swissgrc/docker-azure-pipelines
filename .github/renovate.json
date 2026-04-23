@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>swissgrc/renovate-presets:docker"
+  ],
+  "packageRules": [
+    {
+      "description": "Pin DOTNET9_VERSION to the .NET 9 major line",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["dotnet/sdk"],
+      "matchCurrentVersion": "/^9\\./",
+      "allowedVersions": "<10.0.0"
+    },
+    {
+      "description": "Pin DOTNET10_VERSION to the .NET 10 major line",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["dotnet/sdk"],
+      "matchCurrentVersion": "/^10\\./",
+      "allowedVersions": ">=10.0.0 <11.0.0"
+    }
+  ]
+}
