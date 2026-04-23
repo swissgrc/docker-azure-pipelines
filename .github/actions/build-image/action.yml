@@ -1,0 +1,61 @@
+name: Build image
+description: Build, smoke test, and optionally push one image
+
+inputs:
+  image:
+    description: Image name
+    required: true
+  version:
+    description: Tag to apply to the built image
+    required: true
+  push:
+    description: Push to GHCR
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Compute tags
+      id: tags
+      shell: bash
+      env:
+        IMAGE_REF: ghcr.io/swissgrc/azure-pipelines-${{ inputs.image }}
+        VERSION: ${{ inputs.version }}
+        PUSH: ${{ inputs.push }}
+      run: |
+        set -euo pipefail
+        primary="${IMAGE_REF}:${VERSION}"
+        if [[ "$PUSH" == "true" ]]; then
+          all="${primary},${IMAGE_REF}:latest"
+        else
+          all="${primary}"
+        fi
+        echo "primary=${primary}" >> "$GITHUB_OUTPUT"
+        echo "all=${all}" >> "$GITHUB_OUTPUT"
+
+    - name: Build
+      uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+      with:
+        context: src/${{ inputs.image }}
+        load: true
+        push: false
+        tags: ${{ steps.tags.outputs.all }}
+        build-args: BASE_TAG=${{ inputs.version }}
+        cache-from: type=registry,ref=ghcr.io/swissgrc/azure-pipelines-${{ inputs.image }}:cache
+        cache-to: ${{ inputs.push == 'true' && format('type=registry,ref=ghcr.io/swissgrc/azure-pipelines-{0}:cache,mode=max', inputs.image) || '' }}
+
+    - name: Smoke test
+      shell: bash
+      run: bash test/${{ inputs.image }}.sh "${{ steps.tags.outputs.primary }}"
+
+    - name: Push
+      if: inputs.push == 'true'
+      shell: bash
+      env:
+        TAGS: ${{ steps.tags.outputs.all }}
+      run: |
+        set -euo pipefail
+        IFS=',' read -ra tag_list <<< "$TAGS"
+        for tag in "${tag_list[@]}"; do
+          docker push "$tag"
+        done

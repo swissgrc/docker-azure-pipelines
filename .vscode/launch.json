@@ -1,0 +1,45 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "dockerfile",
+      "request": "launch",
+      "name": "Docker: terra",
+      "dockerfile": "src/terra/Dockerfile",
+      "contextPath": "${workspaceFolder}",
+      "stopOnEntry": true, // if the debugger should suspend on the first line, defaults to false
+    },
+    {
+      "type": "dockerfile",
+      "request": "launch",
+      "name": "Docker: vulcan",
+      "dockerfile": "src/vulcan/Dockerfile",
+      "contextPath": "${workspaceFolder}",
+      "stopOnEntry": true, // if the debugger should suspend on the first line, defaults to false
+    },
+    {
+      "type": "dockerfile",
+      "request": "launch",
+      "name": "Docker: janus",
+      "dockerfile": "src/janus/Dockerfile",
+      "contextPath": "${workspaceFolder}",
+      "stopOnEntry": true, // if the debugger should suspend on the first line, defaults to false
+    },
+    {
+      "type": "dockerfile",
+      "request": "launch",
+      "name": "Docker: hermes",
+      "dockerfile": "src/hermes/Dockerfile",
+      "contextPath": "${workspaceFolder}",
+      "stopOnEntry": true, // if the debugger should suspend on the first line, defaults to false
+    },
+    {
+      "type": "dockerfile",
+      "request": "launch",
+      "name": "Docker: mercury",
+      "dockerfile": "src/mercury/Dockerfile",
+      "contextPath": "${workspaceFolder}",
+      "stopOnEntry": true, // if the debugger should suspend on the first line, defaults to false
+    }
+  ]
+}

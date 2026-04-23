@@ -1,0 +1,145 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel superseded PR runs; queue main/dispatch runs so no publish gets
+# cancelled mid-push (which would leave a broken N in the date sequence).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    name: Compute version tag
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    outputs:
+      version: ${{ steps.compute.outputs.version }}
+    steps:
+      - name: Compute version
+        id: compute
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            // PR: pr-<number>. Stable across incremental pushes; maps 1:1 to a PR page.
+            if (context.eventName === 'pull_request') {
+              const version = `pr-${context.payload.pull_request.number}`;
+              core.info(`Computed PR version ${version}`);
+              core.setOutput('version', version);
+              return;
+            }
+
+            // workflow_dispatch from a non-main branch: sha-<short>. Escape hatch for
+            // ad-hoc builds; never pushed, transient to the run.
+            if (context.ref !== 'refs/heads/main') {
+              const version = `sha-${context.sha.substring(0, 7)}`;
+              core.info(`Computed branch-dispatch version ${version}`);
+              core.setOutput('version', version);
+              return;
+            }
+
+            // main push / dispatch-from-main: YYYY.MM.DD.N — the only scheme that publishes.
+            const now = new Date();
+            const year  = now.getUTCFullYear();
+            const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+            const day   = String(now.getUTCDate()).padStart(2, '0');
+            const date  = `${year}.${month}.${day}`;
+
+            const startOfDay = Date.UTC(year, now.getUTCMonth(), now.getUTCDate());
+            const endOfDay   = startOfDay + 24 * 60 * 60 * 1000;
+            const runId      = context.runId;
+
+            // List all ci.yml runs created today
+            const runs = await github.paginate(
+              github.rest.actions.listWorkflowRuns,
+              {
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+                workflow_id: 'ci.yml',
+                per_page: 100,
+                created: `>=${year}-${month}-${day}T00:00:00Z`,
+              }
+            );
+
+            // Filter to `push` or `workflow_dispatch` runs created before this run
+            const priorPublishes = runs.filter(r => {
+              const t = new Date(r.created_at).getTime();
+              return t >= startOfDay
+                  && t < endOfDay
+                  && r.id < runId
+                  && (r.event === 'push' || r.event === 'workflow_dispatch');
+            });
+
+            const n = priorPublishes.length;
+            const version = `${date}.${n}`;
+
+            core.info(`Computed version ${version} (prior publishes today: ${n})`);
+            core.setOutput('version', version);
+
+  build:
+    name: Build images
+    needs: version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+
+      # Only log in for main branch pushes or dispatches
+      - name: Log in to GHCR
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build terra
+        uses: ./.github/actions/build-image
+        with:
+          image: terra
+          version: ${{ needs.version.outputs.version }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build vulcan
+        uses: ./.github/actions/build-image
+        with:
+          image: vulcan
+          version: ${{ needs.version.outputs.version }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build janus
+        uses: ./.github/actions/build-image
+        with:
+          image: janus
+          version: ${{ needs.version.outputs.version }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build mercury
+        uses: ./.github/actions/build-image
+        with:
+          image: mercury
+          version: ${{ needs.version.outputs.version }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build hermes
+        uses: ./.github/actions/build-image
+        with:
+          image: hermes
+          version: ${{ needs.version.outputs.version }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+
