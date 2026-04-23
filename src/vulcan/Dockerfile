@@ -149,3 +149,53 @@ RUN dotnet --version && \
         /var/lib/apt/lists/* /var/cache/apt/archives/* \
         /tmp/* /root/.cache \
         /root/.npm /root/.local/share/pnpm
+
+
+# ============================================================================
+# test - smoke tests against the final image; driven by bake with
+#        output=cacheonly so the result layer is discarded after assertions.
+# ============================================================================
+FROM final AS test
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# --- vulcan's own tools --------------------------------------------------
+RUN dotnet --version && \
+    dotnet --list-sdks && \
+    node --version && \
+    npm --version && \
+    yarn --version && \
+    pnpm --version && \
+    fc-list --version
+
+# --- .NET env vars are actually exported --------------------------------
+RUN [[ "$(printenv DOTNET_NOLOGO)" == "true" ]] && \
+    [[ "$(printenv DOTNET_CLI_TELEMETRY_OPTOUT)" == "true" ]] && \
+    [[ "$(printenv NUGET_XMLDOC_MODE)" == "skip" ]] && \
+    [[ "$(printenv DISABLE_AUTOUPDATER)" == "1" ]]
+
+# --- Functional: both SDKs compile end-to-end ---------------------------
+RUN <<'EOF'
+set -euo pipefail
+cd "$(mktemp -d)"
+dotnet new console --framework net9.0 -o app9 && dotnet build -f net9.0 app9
+dotnet new console --framework net10.0 -o app10 && dotnet build -f net10.0 app10
+EOF
+
+# --- Functional: Node runs scripts --------------------------------------
+RUN [[ "$(echo 'console.log(2 + 2)' | node)" == "4" ]]
+
+# --- Functional: Yarn and pnpm reach their respective registries --------
+# Exercises outbound HTTPS + package manager resolution without a full install.
+RUN yarn info lodash name
+RUN pnpm info lodash name
+
+# --- Inheritance: every terra tool still works --------------------------
+# Condensed — full set proven by terra's test stage; here we prove inheritance,
+# not retest each tool.
+RUN git --version && \
+    docker --version && \
+    jq --version && \
+    yq --version && \
+    claude --version && \
+    copilot --version

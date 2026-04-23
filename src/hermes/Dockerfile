@@ -40,3 +40,48 @@ RUN npm install -g "renovate@${RENOVATE_VERSION}" && \
 
 # Inline smoke test omitted since Renovate's own smoke test is just `renovate --version`
 # (which we run above) and the rest of the tools are tested in the e2e pipeline.
+
+
+# ============================================================================
+# test - smoke tests against the final image; driven by bake with
+#        output=cacheonly so the result layer is discarded after assertions.
+# ============================================================================
+FROM final AS test
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# --- hermes's own tool ---------------------------------------------------
+RUN renovate --version
+
+# --- Renovate functional: CLI help loads all managers -------------------
+# `renovate --help` exercises module loading across every manager (npm,
+# nuget, etc.) and datasource. Catches a broken post-install step that
+# left RE2 or another native dep in an unusable state.
+RUN renovate --help
+
+# --- RE2 native module loads --------------------------------------------
+# Exercise RE2 directly to catch prebuilt-binary mismatches. If the `re2`
+# post-install step didn't run (or the prebuilt binary doesn't match the
+# runtime), require() throws at load time and this test fails fast — with
+# a clearer signal than a buried Renovate startup error.
+# `re2` is a nested dep of renovate (not a top-level global), so NODE_PATH
+# must point at renovate's own node_modules — $(npm root -g) alone isn't
+# enough since Node's resolver doesn't descend into sibling packages.
+RUN <<'EOF'
+set -euo pipefail
+NODE_PATH="$(npm root -g)/renovate/node_modules" node -e 'const RE2 = require("re2"); if (!new RE2("^\\d+$").test("42")) process.exit(1)'
+EOF
+
+# --- Inheritance: vulcan tools still work -------------------------------
+RUN dotnet --version && \
+    dotnet --list-sdks && \
+    node --version && \
+    npm --version
+
+# --- Inheritance: terra tools still work --------------------------------
+RUN git --version && \
+    docker --version && \
+    jq --version && \
+    yq --version && \
+    claude --version && \
+    copilot --version

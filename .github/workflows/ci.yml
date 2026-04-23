@@ -99,7 +99,9 @@ jobs:
       - name: Set up Buildx
         uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
 
-      # Only log in for main branch pushes or dispatches
+      # Only log in for main branch pushes or dispatches. PRs run tests
+      # without a login — bake wires the image graph in-memory via
+      # `contexts = target:<name>`, so no registry pull is needed.
       - name: Log in to GHCR
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
@@ -108,38 +110,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build terra
-        uses: ./.github/actions/build-image
+      # Runs the `test` Dockerfile stage for every image with output=cacheonly.
+      # Builds all preceding stages (base, build, final) on the way — any
+      # build failure or assertion failure fails this step.
+      - name: Validate (build + smoke test)
+        uses: docker/bake-action@a66e1c87e2eca0503c343edf1d208c716d54b8a8 # v7.1.0
         with:
-          image: terra
-          version: ${{ needs.version.outputs.version }}
-          push: ${{ github.ref == 'refs/heads/main' }}
+          targets: validate
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
 
-      - name: Build vulcan
-        uses: ./.github/actions/build-image
+      # Validate passed, so we know the graph is healthy. On main, rebuild
+      # the `final` stages (cache-hit from the prior step) and push. On PRs
+      # this step is skipped — nothing gets published.
+      - name: Build and push
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: docker/bake-action@a66e1c87e2eca0503c343edf1d208c716d54b8a8 # v7.1.0
         with:
-          image: vulcan
-          version: ${{ needs.version.outputs.version }}
-          push: ${{ github.ref == 'refs/heads/main' }}
-
-      - name: Build janus
-        uses: ./.github/actions/build-image
-        with:
-          image: janus
-          version: ${{ needs.version.outputs.version }}
-          push: ${{ github.ref == 'refs/heads/main' }}
-
-      - name: Build mercury
-        uses: ./.github/actions/build-image
-        with:
-          image: mercury
-          version: ${{ needs.version.outputs.version }}
-          push: ${{ github.ref == 'refs/heads/main' }}
-
-      - name: Build hermes
-        uses: ./.github/actions/build-image
-        with:
-          image: hermes
-          version: ${{ needs.version.outputs.version }}
-          push: ${{ github.ref == 'refs/heads/main' }}
+          targets: default
+          push: true
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          LATEST: "true"
+          PUSH_CACHE: "true"
 
