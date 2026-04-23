@@ -7,6 +7,13 @@ on:
 
 permissions:
   contents: read
+  packages: read
+  # Required to write to issues and pull-requests
+  # request comments
+  issues: write
+  pull-requests: write
+  # Required to report GitHub Actions status checks
+  statuses: write
 
 jobs:
   lint:
