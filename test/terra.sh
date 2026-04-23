@@ -10,7 +10,7 @@ set -euo pipefail
 
 IMAGE="${1:?usage: test/terra.sh <image-ref>}"
 
-run()            { docker run --rm    "$IMAGE" "$@"; }
+run() { docker run --rm "$IMAGE" "$@"; }
 runInteractive() { docker run --rm -i "$IMAGE" "$@"; }
 
 # --- Version checks -------------------------------------------------------
