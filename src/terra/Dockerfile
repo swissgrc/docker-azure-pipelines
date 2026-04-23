@@ -252,6 +252,7 @@ RUN curl --version && \
     copilot --version && \
     claude --version && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
-           # /root/.cache: copilot --version unpacks runtime assets here.
-           /tmp/* /root/.cache
+    rm -rf \
+        /var/lib/apt/lists/* /var/cache/apt/archives/* \
+        # /root/.cache: copilot --version unpacks runtime assets here.
+        /tmp/* /root/.cache

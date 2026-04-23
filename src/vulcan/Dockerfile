@@ -145,6 +145,7 @@ RUN dotnet --version && \
     pnpm --version && \
     fc-list | head -n1 && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
-           /tmp/* /root/.cache \
-           /root/.npm /root/.local/share/pnpm
+    rm -rf \
+        /var/lib/apt/lists/* /var/cache/apt/archives/* \
+        /tmp/* /root/.cache \
+        /root/.npm /root/.local/share/pnpm

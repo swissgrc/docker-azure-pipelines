@@ -174,7 +174,8 @@ RUN az --version && \
     kubelogin --version && \
     swa --version && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
-           /tmp/* /root/.cache \
-           /root/.npm \
-           /root/.azure
+    rm -rf \
+        /var/lib/apt/lists/* /var/cache/apt/archives/* \
+        /tmp/* /root/.cache \
+        /root/.npm \
+        /root/.azure

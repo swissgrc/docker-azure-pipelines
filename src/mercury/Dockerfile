@@ -46,9 +46,10 @@ RUN npm install -g --ignore-scripts \
     playwright install --with-deps chromium firefox webkit && \
     chmod -R 777 /ms-playwright && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
-           /root/.cache \
-           /root/.npm /tmp/node-compile-cache
+    rm -rf \
+        /var/lib/apt/lists/* /var/cache/apt/archives/* \
+        /root/.cache \
+        /root/.npm /tmp/node-compile-cache
 
 # Inline smoke test omitted since Playwright's own smoke test is just `playwright --version`
 # (which we run above) and the browsers are tested in the e2e pipeline.
