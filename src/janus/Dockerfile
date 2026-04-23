@@ -46,8 +46,7 @@ ENV TERRAFORM_VERSION=1.13.3
 RUN base="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}" && \
     curl -fsSL -o /tmp/terraform.zip "${base}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
     curl -fsSL -o /tmp/terraform_SHA256SUMS "${base}/terraform_${TERRAFORM_VERSION}_SHA256SUMS" && \
-    cd /tmp && \
-    expected_sha=$(grep -E '[[:space:]]terraform_'"${TERRAFORM_VERSION}"'_linux_amd64\.zip$' terraform_SHA256SUMS | awk '{print $1}') && \
+    expected_sha=$(grep -E '[[:space:]]terraform_'"${TERRAFORM_VERSION}"'_linux_amd64\.zip$' /tmp/terraform_SHA256SUMS | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/terraform.zip" | sha256sum -c - && \
     unzip -q /tmp/terraform.zip terraform -d /tmp && \
     /tmp/terraform --version && \
@@ -60,8 +59,7 @@ ENV PACKER_VERSION=1.13.1
 RUN base="https://releases.hashicorp.com/packer/${PACKER_VERSION}" && \
     curl -fsSL -o /tmp/packer.zip "${base}/packer_${PACKER_VERSION}_linux_amd64.zip" && \
     curl -fsSL -o /tmp/packer_SHA256SUMS "${base}/packer_${PACKER_VERSION}_SHA256SUMS" && \
-    cd /tmp && \
-    expected_sha=$(grep -E '[[:space:]]packer_'"${PACKER_VERSION}"'_linux_amd64\.zip$' packer_SHA256SUMS | awk '{print $1}') && \
+    expected_sha=$(grep -E '[[:space:]]packer_'"${PACKER_VERSION}"'_linux_amd64\.zip$' /tmp/packer_SHA256SUMS | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/packer.zip" | sha256sum -c - && \
     unzip -q /tmp/packer.zip packer -d /tmp && \
     /tmp/packer --version && \
@@ -74,8 +72,7 @@ ENV TFLINT_VERSION=0.58.1
 RUN base="https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}" && \
     curl -fsSL -o /tmp/tflint.zip "${base}/tflint_linux_amd64.zip" && \
     curl -fsSL -o /tmp/tflint_checksums.txt "${base}/checksums.txt" && \
-    cd /tmp && \
-    expected_sha=$(grep -E '[[:space:]]tflint_linux_amd64\.zip$' tflint_checksums.txt | awk '{print $1}') && \
+    expected_sha=$(grep -E '[[:space:]]tflint_linux_amd64\.zip$' /tmp/tflint_checksums.txt | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/tflint.zip" | sha256sum -c - && \
     unzip -q /tmp/tflint.zip tflint -d /tmp && \
     /tmp/tflint --version && \
@@ -88,8 +85,7 @@ ENV HELM_VERSION=3.18.4
 RUN base="https://get.helm.sh" && \
     curl -fsSL -o /tmp/helm.tar.gz "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz" && \
     curl -fsSL -o /tmp/helm.tar.gz.sha256 "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256" && \
-    cd /tmp && \
-    expected_sha=$(awk '{print $1}' helm.tar.gz.sha256) && \
+    expected_sha=$(awk '{print $1}' /tmp/helm.tar.gz.sha256) && \
     echo "${expected_sha}  /tmp/helm.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/helm.tar.gz -C /tmp --strip-components=1 linux-amd64/helm && \
     /tmp/helm version && \
@@ -102,8 +98,7 @@ ENV KUBECTL_VERSION=1.34.0
 RUN base="https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64" && \
     curl -fsSL -o /tmp/kubectl "${base}/kubectl" && \
     curl -fsSL -o /tmp/kubectl.sha256 "${base}/kubectl.sha256" && \
-    cd /tmp && \
-    expected_sha=$(awk '{print $1}' kubectl.sha256) && \
+    expected_sha=$(awk '{print $1}' /tmp/kubectl.sha256) && \
     echo "${expected_sha}  /tmp/kubectl" | sha256sum -c - && \
     chmod +x /tmp/kubectl && \
     /tmp/kubectl version --client && \
@@ -116,8 +111,7 @@ ENV KUBELOGIN_VERSION=0.2.9
 RUN base="https://github.com/Azure/kubelogin/releases/download/v${KUBELOGIN_VERSION}" && \
     curl -fsSL -o /tmp/kubelogin.zip "${base}/kubelogin-linux-amd64.zip" && \
     curl -fsSL -o /tmp/kubelogin.zip.sha256 "${base}/kubelogin-linux-amd64.zip.sha256" && \
-    cd /tmp && \
-    expected_sha=$(awk '{print $1}' kubelogin.zip.sha256) && \
+    expected_sha=$(awk '{print $1}' /tmp/kubelogin.zip.sha256) && \
     echo "${expected_sha}  /tmp/kubelogin.zip" | sha256sum -c - && \
     unzip -jq /tmp/kubelogin.zip bin/linux_amd64/kubelogin -d /tmp && \
     /tmp/kubelogin --version && \

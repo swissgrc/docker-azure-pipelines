@@ -45,8 +45,7 @@ ENV JQ_VERSION=1.8.0
 
 ADD --chmod=755 https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-amd64 /tmp/jq
 ADD https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/sha256sum.txt /tmp/jq-sha256.txt
-RUN cd /tmp && \
-    expected_sha=$(grep -E '[[:space:]]jq-linux-amd64$' jq-sha256.txt | awk '{print $1}') && \
+RUN expected_sha=$(grep -E '[[:space:]]jq-linux-amd64$' /tmp/jq-sha256.txt | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/jq" | sha256sum -c - && \
     /tmp/jq --version
 
@@ -61,9 +60,8 @@ ADD https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/checksums_h
 # yq ships one wide checksums file with many hash columns; checksums_hashes_order
 # names each column in order. Look up the SHA-256 column dynamically so a future
 # release that reorders columns doesn't silently verify against the wrong hash.
-RUN cd /tmp && \
-    sha256_col=$(awk '$0=="SHA-256" {print NR; exit}' yq-hashes-order) && \
-    expected_sha=$(awk -v c=$((sha256_col + 1)) '$1=="yq_linux_amd64" {print $c}' yq-checksums) && \
+RUN sha256_col=$(awk '$0=="SHA-256" {print NR; exit}' /tmp/yq-hashes-order) && \
+    expected_sha=$(awk -v c=$((sha256_col + 1)) '$1=="yq_linux_amd64" {print $c}' /tmp/yq-checksums) && \
     echo "${expected_sha}  /tmp/yq" | sha256sum -c - && \
     /tmp/yq --version
 
@@ -100,18 +98,14 @@ RUN apt-get update && \
         zlib1g-dev="${ZLIB1G_DEV_VERSION}" && \
     rm -rf /var/lib/apt/lists/*
 
-# Compile Git from source
+# Compile Git from source. prefix/sysconfdir are passed as make variables
+# (Git's Makefile honors them) so we skip ./configure entirely — autoconf
+# would require `cd` into the source tree. sysconfdir=/etc matches Debian's
+# layout so `git config --system` and `git lfs install --system` write to
+# /etc/gitconfig, not /usr/etc/gitconfig.
 ADD https://github.com/git/git/archive/refs/tags/v${GIT_VERSION}.tar.gz /tmp/git.tar.gz
-RUN cd /tmp && \
-    tar -xzf git.tar.gz && \
-    cd "git-${GIT_VERSION}" && \
-    make configure && \
-    # --sysconfdir=/etc matches Debian's layout so `git config --system` and
-    # `git lfs install --system` write to /etc/gitconfig, not /usr/etc/gitconfig.
-    ./configure --prefix=/usr --sysconfdir=/etc && \
-    make -j"$(nproc)" all && \
-    make install && \
-    # Smoke test
+RUN tar -xzf /tmp/git.tar.gz -C /tmp && \
+    make -C "/tmp/git-${GIT_VERSION}" prefix=/usr sysconfdir=/etc -j"$(nproc)" install && \
     git --version
 
 # --- Git LFS (upstream tarball; avoids APT pulling in `git` + Perl transitively)
@@ -124,8 +118,7 @@ ENV GIT_LFS_VERSION=3.5.1
 RUN base="https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}" && \
     curl -fsSL -o /tmp/git-lfs.tar.gz     "${base}/git-lfs-linux-amd64-v${GIT_LFS_VERSION}.tar.gz" && \
     curl -fsSL -o /tmp/git-lfs-sha256.asc "${base}/sha256sums.asc" && \
-    cd /tmp && \
-    expected_sha=$(grep -E "\*git-lfs-linux-amd64-v${GIT_LFS_VERSION}\.tar\.gz$" git-lfs-sha256.asc | awk '{print $1}') && \
+    expected_sha=$(grep -E "\*git-lfs-linux-amd64-v${GIT_LFS_VERSION}\.tar\.gz$" /tmp/git-lfs-sha256.asc | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/git-lfs.tar.gz" | sha256sum -c - && \
     mkdir -p /tmp/git-lfs-extract && \
     tar -xzf /tmp/git-lfs.tar.gz -C /tmp/git-lfs-extract --strip-components=1 && \
@@ -173,8 +166,7 @@ ENV COPILOT_VERSION=1.0.24
 RUN base="https://github.com/github/copilot-cli/releases/download/v${COPILOT_VERSION}" && \
     curl -fsSL -o /tmp/copilot.tar.gz "${base}/copilot-linux-x64.tar.gz" && \
     curl -fsSL -o /tmp/SHA256SUMS.txt "${base}/SHA256SUMS.txt" && \
-    cd /tmp && \
-    expected_sha=$(grep -E '[[:space:]]copilot-linux-x64\.tar\.gz$' SHA256SUMS.txt | awk '{print $1}') && \
+    expected_sha=$(grep -E '[[:space:]]copilot-linux-x64\.tar\.gz$' /tmp/SHA256SUMS.txt | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/copilot.tar.gz" | sha256sum -c - && \
     mkdir -p /tmp/copilot-extract && \
     tar -xzf /tmp/copilot.tar.gz -C /tmp/copilot-extract && \

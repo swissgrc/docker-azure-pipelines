@@ -36,13 +36,13 @@ ENV DOTNET9_VERSION=9.0.313
 ADD https://builds.dotnet.microsoft.com/dotnet/Sdk/${DOTNET9_VERSION}/dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz /tmp/
 ADD https://builds.dotnet.microsoft.com/dotnet/Sdk/${DOTNET9_VERSION}/dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz.sha512 /tmp/
 
-RUN cd /tmp && \
-    sha512sum -c "dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz.sha512" && \
+RUN expected_sha=$(awk '{print $1}' "/tmp/dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz.sha512") && \
+    echo "${expected_sha}  /tmp/dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz" | sha512sum -c - && \
     mkdir -p /usr/share/dotnet && \
-    tar -xzf "dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz" -C /usr/share/dotnet && \
+    tar -xzf "/tmp/dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz" -C /usr/share/dotnet && \
     /usr/share/dotnet/dotnet --list-sdks | grep -q "^9\\." && \
-    rm "dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz" \
-       "dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz.sha512"
+    rm "/tmp/dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz" \
+        "/tmp/dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz.sha512"
 
 # --- .NET SDK 10 (bypasses dotnet-install.sh) ----------------------------
 # renovate: datasource=github-tags depName=dotnet/sdk extractVersion=^v(?<version>.*)$
@@ -51,13 +51,13 @@ ENV DOTNET10_VERSION=10.0.201
 ADD https://builds.dotnet.microsoft.com/dotnet/Sdk/${DOTNET10_VERSION}/dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz /tmp/
 ADD https://builds.dotnet.microsoft.com/dotnet/Sdk/${DOTNET10_VERSION}/dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz.sha512 /tmp/
 
-RUN cd /tmp && \
-    sha512sum -c "dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz.sha512" && \
-    tar -xzf "dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz" -C /usr/share/dotnet && \
+RUN expected_sha=$(awk '{print $1}' "/tmp/dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz.sha512") && \
+    echo "${expected_sha}  /tmp/dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz" | sha512sum -c - && \
+    tar -xzf "/tmp/dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz" -C /usr/share/dotnet && \
     /usr/share/dotnet/dotnet --list-sdks | grep -q "^9\\." && \
     /usr/share/dotnet/dotnet --list-sdks | grep -q "^10\\." && \
-    rm "dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz" \
-       "dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz.sha512"
+    rm "/tmp/dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz" \
+        "/tmp/dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz.sha512"
 
 # --- NodeSource APT repo (keyring + source list; nodejs installed in `final`)
 RUN install -m 0755 -d /etc/apt/keyrings && \
