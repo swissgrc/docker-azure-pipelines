@@ -269,7 +269,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # --- Version checks ------------------------------------------------------
 # Re-assert PATH + runtime deps resolve against `final`, catching anything
 # the inline checks in `final` couldn't see (e.g., post-cleanup state).
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN curl --version && \
     unzip -v && \
     docker --version && \
@@ -286,25 +286,25 @@ RUN curl --version && \
 
 # --- Functional smoke tests ---------------------------------------------
 # jq parses JSON on stdin.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN [[ "$(echo '{"a":1}' | jq '.a')" == "1" ]]
 
 # yq parses YAML on stdin.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN [[ "$(echo 'a: 1' | yq '.a')" == "1" ]]
 
 # Git clones over HTTPS — exercises libcurl3-gnutls runtime dep.
 # `awk 'NR==1'` reads to EOF (unlike `head -n1` which closes early and gives
 # git SIGPIPE on some hosts), so pipefail still catches a failing git while
 # only the first ref line is printed for readability.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN git ls-remote https://github.com/octocat/Hello-World.git | awk 'NR==1'
 
 # Git LFS registers its filters into git config — proves the binary integrates
 # with git, not just that it loads.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN git lfs install
 
 # Buildx is reachable as a docker CLI plugin (not just a standalone binary).
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN docker buildx ls

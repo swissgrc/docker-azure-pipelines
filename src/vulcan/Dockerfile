@@ -160,7 +160,7 @@ FROM final AS test
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # --- vulcan's own tools --------------------------------------------------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN dotnet --version && \
     dotnet --list-sdks && \
     node --version && \
@@ -170,14 +170,14 @@ RUN dotnet --version && \
     fc-list --version
 
 # --- .NET env vars are actually exported --------------------------------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN [[ "$(printenv DOTNET_NOLOGO)" == "true" ]] && \
     [[ "$(printenv DOTNET_CLI_TELEMETRY_OPTOUT)" == "true" ]] && \
     [[ "$(printenv NUGET_XMLDOC_MODE)" == "skip" ]] && \
     [[ "$(printenv DISABLE_AUTOUPDATER)" == "1" ]]
 
 # --- Functional: both SDKs compile end-to-end ---------------------------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN <<'EOF'
 set -euo pipefail
 tmp="$(mktemp -d)"
@@ -186,20 +186,20 @@ dotnet new console --framework net10.0 -o "$tmp/app10" && dotnet build -f net10.
 EOF
 
 # --- Functional: Node runs scripts --------------------------------------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN [[ "$(echo 'console.log(2 + 2)' | node)" == "4" ]]
 
 # --- Functional: Yarn and pnpm reach their respective registries --------
 # Exercises outbound HTTPS + package manager resolution without a full install.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN yarn info lodash name
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN pnpm info lodash name
 
 # --- Inheritance: every terra tool still works --------------------------
 # Condensed — full set proven by terra's test stage; here we prove inheritance,
 # not retest each tool.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN git --version && \
     docker --version && \
     jq --version && \

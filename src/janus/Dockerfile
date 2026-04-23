@@ -189,7 +189,7 @@ FROM final AS test
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # --- janus's own tools ---------------------------------------------------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN az --version && \
     terraform --version && \
     tflint --version && \
@@ -203,11 +203,11 @@ RUN az --version && \
 # `az extension list-available` downloads the public extension index from
 # azcliextensionsync.blob.core.windows.net — a genuine anonymous HTTPS call
 # that proves DNS + outbound networking + CLI initialization.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN az extension list-available --output table
 
 # --- Terraform functional: inits and validates an empty config ----------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN <<'EOF'
 set -euo pipefail
 tmp="$(mktemp -d)"
@@ -218,7 +218,7 @@ EOF
 
 # --- Helm functional: adds a public chart repo --------------------------
 # kubernetes-sigs/metrics-server is an actively maintained chart repo.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN <<'EOF'
 set -euo pipefail
 helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
@@ -227,11 +227,11 @@ helm search repo metrics-server/
 EOF
 
 # --- kubectl functional: binary loads and parses flags without a cluster
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN kubectl api-resources --help
 
 # --- Packer functional: inits and validates an empty template -----------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN <<'EOF'
 set -euo pipefail
 tmp="$(mktemp -d)"
@@ -254,19 +254,19 @@ EOF
 # `swa deploy --help` forces deploy-path imports (native bindings, lazy
 # sub-packages) so we catch any regression from `--ignore-scripts` skipping
 # a post-install step that the deploy code path relies on.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN swa deploy --help
 
 # --- Inheritance: vulcan tools still work -------------------------------
 # Condensed — full set proven by vulcan's test stage; here we prove inheritance.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN dotnet --version && \
     dotnet --list-sdks && \
     node --version && \
     npm --version
 
 # --- Inheritance: terra tools still work --------------------------------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN git --version && \
     docker --version && \
     jq --version && \

@@ -64,15 +64,15 @@ FROM final AS test
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # --- mercury's own tool -------------------------------------------------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN playwright --version
 
 # --- Browser install path is set, populated, and world-readable --------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN test -d /ms-playwright
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN test "$PLAYWRIGHT_BROWSERS_PATH" = "/ms-playwright"
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN test "$(stat -c %a /ms-playwright)" = "777"
 
 # --- Playwright functional: each browser launches headless -------------
@@ -81,7 +81,7 @@ RUN test "$(stat -c %a /ms-playwright)" = "777"
 # the browser exits non-zero at launch with a loader error naming the lib.
 # NODE_PATH points at the global node_modules root so `require("playwright")`
 # resolves against the globally-installed package.
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN <<'EOF'
 set -euo pipefail
 NODE_PATH="$(npm root -g)"
@@ -104,14 +104,14 @@ done
 EOF
 
 # --- Inheritance: vulcan tools still work ------------------------------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN dotnet --version && \
     dotnet --list-sdks && \
     node --version && \
     npm --version
 
 # --- Inheritance: terra tools still work -------------------------------
-# hadolint ignore=DL3059 # Test-Stage
+# hadolint ignore=DL3059
 RUN git --version && \
     docker --version && \
     jq --version && \
