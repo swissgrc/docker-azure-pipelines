@@ -51,12 +51,14 @@ FROM final AS test
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # --- hermes's own tool ---------------------------------------------------
+# hadolint ignore=DL3059 # Test-Stage
 RUN renovate --version
 
 # --- Renovate functional: CLI help loads all managers -------------------
 # `renovate --help` exercises module loading across every manager (npm,
 # nuget, etc.) and datasource. Catches a broken post-install step that
 # left RE2 or another native dep in an unusable state.
+# hadolint ignore=DL3059 # Test-Stage
 RUN renovate --help
 
 # --- RE2 native module loads --------------------------------------------
@@ -67,18 +69,21 @@ RUN renovate --help
 # `re2` is a nested dep of renovate (not a top-level global), so NODE_PATH
 # must point at renovate's own node_modules — $(npm root -g) alone isn't
 # enough since Node's resolver doesn't descend into sibling packages.
+# hadolint ignore=DL3059 # Test-Stage
 RUN <<'EOF'
 set -euo pipefail
 NODE_PATH="$(npm root -g)/renovate/node_modules" node -e 'const RE2 = require("re2"); if (!new RE2("^\\d+$").test("42")) process.exit(1)'
 EOF
 
 # --- Inheritance: vulcan tools still work -------------------------------
+# hadolint ignore=DL3059 # Test-Stage
 RUN dotnet --version && \
     dotnet --list-sdks && \
     node --version && \
     npm --version
 
 # --- Inheritance: terra tools still work --------------------------------
+# hadolint ignore=DL3059 # Test-Stage
 RUN git --version && \
     docker --version && \
     jq --version && \
