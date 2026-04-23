@@ -133,4 +133,3 @@ jobs:
           VERSION: ${{ needs.version.outputs.version }}
           LATEST: "true"
           PUSH_CACHE: "true"
-
