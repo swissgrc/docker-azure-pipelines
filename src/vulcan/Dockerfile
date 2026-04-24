@@ -91,7 +91,7 @@ ENV FONTCONFIG_VERSION=2.15.0-2.3
 ENV LIBICU_VERSION=76.1-4
 
 # renovate: datasource=github-tags depName=nodejs/node extractVersion=^v(?<version>.*)$
-ENV NODE_VERSION=24.14.1
+ENV NODE_VERSION=24.15.0
 
 # Bring keyrings + source list in from `build`.
 COPY --from=build /etc/apt/keyrings/nodesource.gpg /etc/apt/keyrings/nodesource.gpg
