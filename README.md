@@ -1,8 +1,8 @@
 # Docker images for Azure Pipelines container jobs
 
-<!-- markdownlint-disable MD013 -->
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/swissgrc/docker-azure-pipelines/blob/main/LICENSE) [![CI](https://img.shields.io/github/actions/workflow/status/swissgrc/docker-azure-pipelines/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/swissgrc/docker-azure-pipelines/actions/workflows/ci.yml) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=swissgrc_docker-azure-pipelines&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=swissgrc_docker-azure-pipelines)
-<!-- markdownlint-restore -->
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/swissgrc/docker-azure-pipelines/blob/main/LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/swissgrc/docker-azure-pipelines/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/swissgrc/docker-azure-pipelines/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=swissgrc_docker-azure-pipelines&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=swissgrc_docker-azure-pipelines)
 
 Docker images to run various workloads in [Azure Pipelines container jobs].
 
@@ -30,7 +30,7 @@ The following example shows a build step using the `vulcan` image (.NET + Node.j
 ## Images
 
 | Image                                                                                                                  | Role                   | Base             |
-|------------------------------------------------------------------------------------------------------------------------|------------------------|------------------|
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------- | ---------------- |
 | [`azure-pipelines-terra`](https://github.com/swissgrc/docker-azure-pipelines/pkgs/container/azure-pipelines-terra)     | L1 foundation          | `debian:13-slim` |
 | [`azure-pipelines-vulcan`](https://github.com/swissgrc/docker-azure-pipelines/pkgs/container/azure-pipelines-vulcan)   | L2 build runtimes      | `terra`          |
 | [`azure-pipelines-janus`](https://github.com/swissgrc/docker-azure-pipelines/pkgs/container/azure-pipelines-janus)     | L3a deployment         | `vulcan`         |
@@ -96,7 +96,7 @@ Dependency updates image for running [Renovate] self-hosted.
 ## Tags
 
 | Tag            | Description                                                                                         |
-|----------------|-----------------------------------------------------------------------------------------------------|
+| -------------- | --------------------------------------------------------------------------------------------------- |
 | `latest`       | Latest stable release (from `main` branch)                                                          |
 | `YYYY.MM.DD.N` | Immutable version for a specific CI run (`N` = zero-based count of prior publishes on that UTC day) |
 
