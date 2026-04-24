@@ -1,8 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>swissgrc/renovate-presets:docker"
-  ],
+  "extends": ["github>swissgrc/renovate-presets:docker"],
   "timezone": "Europe/Zurich",
   "packageRules": [
     {
@@ -34,10 +32,7 @@
     },
     {
       "description": "Claude CLI + Copilot CLI: batch into at most one PR per day",
-      "matchPackageNames": [
-        "@anthropic-ai/claude-code",
-        "github/copilot-cli"
-      ],
+      "matchPackageNames": ["@anthropic-ai/claude-code", "github/copilot-cli"],
       "schedule": ["before 5am"]
     },
     {
