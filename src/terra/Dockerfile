@@ -67,7 +67,7 @@ RUN sha256_col=$(awk '$0=="SHA-256" {print NR; exit}' /tmp/yq-hashes-order) && \
 
 # --- Git from source ------------------------------------------------------
 # renovate: datasource=github-tags depName=git/git extractVersion=^v(?<version>.*)$
-ENV GIT_VERSION=2.53.0
+ENV GIT_VERSION=2.54.0
 
 # Repology has no debian_13 data for build-essential, so we query the apt
 # archive directly via Renovate's `deb` datasource.
