@@ -110,7 +110,7 @@ RUN tar -xzf /tmp/git.tar.gz -C /tmp && \
 
 # --- Git LFS (upstream tarball; avoids APT pulling in `git` + Perl transitively)
 # renovate: datasource=github-releases depName=git-lfs/git-lfs extractVersion=^v(?<version>.*)$
-ENV GIT_LFS_VERSION=3.5.1
+ENV GIT_LFS_VERSION=3.7.1
 
 # sha256sums.asc is a PGP cleartext-signed list in binary-mode sha256sum format
 # (`<hash> *<file>`). We verify the hash only — the `*FILENAME` pattern also
