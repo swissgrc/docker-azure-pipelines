@@ -41,7 +41,7 @@ RUN apt-get update && \
 
 # --- jq -------------------------------------------------------------------
 # renovate: datasource=github-releases depName=jqlang/jq extractVersion=^jq-(?<version>.*)$
-ENV JQ_VERSION=1.8.0
+ENV JQ_VERSION=1.8.1
 
 ADD --chmod=755 https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-amd64 /tmp/jq
 ADD https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/sha256sum.txt /tmp/jq-sha256.txt
