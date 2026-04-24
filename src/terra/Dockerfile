@@ -287,11 +287,11 @@ RUN curl --version && \
 # --- Functional smoke tests ---------------------------------------------
 # jq parses JSON on stdin.
 # hadolint ignore=DL3059
-RUN [[ "$(echo '{"a":1}' | jq '.a')" == "1" ]]
+RUN test "$(echo '{"a":1}' | jq '.a')" = "1"
 
 # yq parses YAML on stdin.
 # hadolint ignore=DL3059
-RUN [[ "$(echo 'a: 1' | yq '.a')" == "1" ]]
+RUN test "$(echo 'a: 1' | yq '.a')" = "1"
 
 # Git clones over HTTPS — exercises libcurl3-gnutls runtime dep.
 # `awk 'NR==1'` reads to EOF (unlike `head -n1` which closes early and gives
