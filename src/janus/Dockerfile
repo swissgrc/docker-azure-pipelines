@@ -136,7 +136,7 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
 ENV AZURE_CLI_VERSION=2.85.0
 
 # renovate: datasource=npm depName=@azure/static-web-apps-cli
-ENV SWA_CLI_VERSION=2.0.2
+ENV SWA_CLI_VERSION=2.0.9
 
 # Bring Microsoft keyring + source list in from `build`.
 COPY --from=build /etc/apt/keyrings/microsoft.gpg /etc/apt/keyrings/microsoft.gpg
