@@ -51,7 +51,7 @@ RUN expected_sha=$(grep -E '[[:space:]]jq-linux-amd64$' /tmp/jq-sha256.txt | awk
 
 # --- yq -------------------------------------------------------------------
 # renovate: datasource=github-releases depName=mikefarah/yq extractVersion=^v(?<version>.*)$
-ENV YQ_VERSION=4.52.4
+ENV YQ_VERSION=4.53.2
 
 ADD --chmod=755 https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64 /tmp/yq
 ADD https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/checksums /tmp/yq-checksums
