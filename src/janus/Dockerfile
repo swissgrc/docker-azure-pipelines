@@ -93,7 +93,7 @@ RUN base="https://get.helm.sh" && \
 
 # --- kubectl -------------------------------------------------------------
 # renovate: datasource=github-tags depName=kubernetes/kubernetes extractVersion=^v(?<version>.*)$
-ENV KUBECTL_VERSION=1.34.0
+ENV KUBECTL_VERSION=1.36.0
 
 RUN base="https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64" && \
     curl -fsSL -o /tmp/kubectl "${base}/kubectl" && \
