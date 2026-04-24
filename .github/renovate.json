@@ -3,6 +3,7 @@
   "extends": [
     "github>swissgrc/renovate-presets:docker"
   ],
+  "timezone": "Europe/Zurich",
   "packageRules": [
     {
       "description": "Pin DOTNET9_VERSION to the .NET 9 major line",
@@ -17,6 +18,32 @@
       "matchPackageNames": ["dotnet/sdk"],
       "matchCurrentVersion": "/^10\\./",
       "allowedVersions": ">=10.0.0 <11.0.0"
+    },
+    {
+      "description": "Never auto-bump .NET SDK majors (new majors are added manually)",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["dotnet/sdk"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "Node.js: LTS line only (even majors)",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["nodejs/node"],
+      "allowedVersions": "/^\\d*[02468]\\./"
+    },
+    {
+      "description": "Claude CLI + Copilot CLI: batch into at most one PR per day",
+      "matchPackageNames": [
+        "@anthropic-ai/claude-code",
+        "github/copilot-cli"
+      ],
+      "schedule": ["before 5am"]
+    },
+    {
+      "description": "Renovate self-update: once per week (Monday mornings)",
+      "matchPackageNames": ["renovate"],
+      "schedule": ["before 5am on monday"]
     }
   ]
 }
