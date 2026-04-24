@@ -41,7 +41,7 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
 
 # --- Terraform -----------------------------------------------------------
 # renovate: datasource=github-tags depName=hashicorp/terraform extractVersion=^v(?<version>.*)$
-ENV TERRAFORM_VERSION=1.13.3
+ENV TERRAFORM_VERSION=1.14.9
 
 RUN base="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}" && \
     curl -fsSL -o /tmp/terraform.zip "${base}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
