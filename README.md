@@ -1,7 +1,7 @@
 # Docker images for Azure Pipelines container jobs
 
 <!-- markdownlint-disable MD013 -->
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/swissgrc/docker-azure-pipelines/blob/main/LICENSE) [![CI](https://img.shields.io/github/actions/workflow/status/swissgrc/docker-azure-pipelines/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/swissgrc/docker-azure-pipelines/actions/workflows/ci.yml) [![Lint](https://img.shields.io/github/actions/workflow/status/swissgrc/docker-azure-pipelines/lint.yml?branch=main&style=flat-square&label=Lint)](https://github.com/swissgrc/docker-azure-pipelines/actions/workflows/lint.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/swissgrc/docker-azure-pipelines/blob/main/LICENSE) [![CI](https://img.shields.io/github/actions/workflow/status/swissgrc/docker-azure-pipelines/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/swissgrc/docker-azure-pipelines/actions/workflows/ci.yml) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=swissgrc_docker-azure-pipelines&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=swissgrc_docker-azure-pipelines)
 <!-- markdownlint-restore -->
 
 Docker images to run various workloads in [Azure Pipelines container jobs].
