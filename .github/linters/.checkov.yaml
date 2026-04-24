@@ -1,0 +1,15 @@
+---
+# Don't report passed checks in output
+quiet: true
+
+# Super-linter invokes checkov against all Dockerfiles in the repo.
+# These skips apply specifically to Azure Pipelines build-agent images.
+skip-check:
+  # HEALTHCHECK is not meaningful for one-shot build-agent containers.
+  - CKV_DOCKER_2
+  # Agent images must run as root to install tools and mount workspaces.
+  - CKV_DOCKER_3
+  # ADD <url> is paired with explicit sha256sum -c verification in every
+  # occurrence (see terra/Dockerfile, vulcan/Dockerfile), so the "fetch
+  # without verification" concern behind CKV_DOCKER_4 does not apply.
+  - CKV_DOCKER_4
