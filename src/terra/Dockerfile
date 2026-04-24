@@ -136,7 +136,7 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
 
 # --- Claude CLI (bypasses install.sh for reproducibility ------------------
 # renovate: datasource=npm depName=@anthropic-ai/claude-code
-ENV CLAUDE_VERSION=2.1.105
+ENV CLAUDE_VERSION=2.1.119
 
 ENV CLAUDE_KEY_FINGERPRINT=31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE
 # Anthropic's GCS distribution bucket. If this ever 403s, check the canonical
