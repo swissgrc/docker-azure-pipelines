@@ -67,7 +67,7 @@ RUN base="https://releases.hashicorp.com/packer/${PACKER_VERSION}" && \
 
 # --- tflint --------------------------------------------------------------
 # renovate: datasource=github-releases depName=terraform-linters/tflint extractVersion=^v(?<version>.*)$
-ENV TFLINT_VERSION=0.58.1
+ENV TFLINT_VERSION=0.62.0
 
 RUN base="https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}" && \
     curl -fsSL -o /tmp/tflint.zip "${base}/tflint_linux_amd64.zip" && \
