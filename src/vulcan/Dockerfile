@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.7
+# syntax=docker/dockerfile:1.23
 
 # BASE_TAG is overridden by CI (`--build-arg BASE_TAG=<tag>`); the default
 # here keeps `docker buildx build src/vulcan` working without flags.
