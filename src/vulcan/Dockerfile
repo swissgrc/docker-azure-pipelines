@@ -171,10 +171,10 @@ RUN dotnet --version && \
 
 # --- .NET env vars are actually exported --------------------------------
 # hadolint ignore=DL3059
-RUN [[ "$(printenv DOTNET_NOLOGO)" == "true" ]] && \
-    [[ "$(printenv DOTNET_CLI_TELEMETRY_OPTOUT)" == "true" ]] && \
-    [[ "$(printenv NUGET_XMLDOC_MODE)" == "skip" ]] && \
-    [[ "$(printenv DISABLE_AUTOUPDATER)" == "1" ]]
+RUN test "$(printenv DOTNET_NOLOGO)" = "true" && \
+    test "$(printenv DOTNET_CLI_TELEMETRY_OPTOUT)" = "true" && \
+    test "$(printenv NUGET_XMLDOC_MODE)" = "skip" && \
+    test "$(printenv DISABLE_AUTOUPDATER)" = "1"
 
 # --- Functional: both SDKs compile end-to-end ---------------------------
 # hadolint ignore=DL3059
@@ -187,7 +187,7 @@ EOF
 
 # --- Functional: Node runs scripts --------------------------------------
 # hadolint ignore=DL3059
-RUN [[ "$(echo 'console.log(2 + 2)' | node)" == "4" ]]
+RUN test "$(echo 'console.log(2 + 2)' | node)" = "4"
 
 # --- Functional: Yarn and pnpm reach their respective registries --------
 # Exercises outbound HTTPS + package manager resolution without a full install.
