@@ -161,7 +161,7 @@ RUN GNUPGHOME="$(mktemp -d)" && export GNUPGHOME && \
 
 # --- Copilot CLI ----------------------------------------------------------
 # renovate: datasource=github-releases depName=github/copilot-cli extractVersion=^v(?<version>.*)$
-ENV COPILOT_VERSION=1.0.35
+ENV COPILOT_VERSION=1.0.36
 
 RUN base="https://github.com/github/copilot-cli/releases/download/v${COPILOT_VERSION}" && \
     curl -fsSL -o /tmp/copilot.tar.gz "${base}/copilot-linux-x64.tar.gz" && \
