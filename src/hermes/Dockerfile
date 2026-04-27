@@ -28,7 +28,7 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
       org.opencontainers.image.documentation="https://github.com/swissgrc/docker-azure-pipelines"
 
 # renovate: datasource=npm depName=renovate
-ENV RENOVATE_VERSION=43.141.0
+ENV RENOVATE_VERSION=43.141.6
 
 # Renovate. Scripts deliberately enabled (no `--ignore-scripts`) so the
 # `re2` post-install step can fetch its prebuilt native binary. Without RE2,
