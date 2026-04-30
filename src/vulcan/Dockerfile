@@ -67,6 +67,18 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main" \
         > /etc/apt/sources.list.d/nodesource.list
 
+# --- uv ------------------------------------------------------------------
+# renovate: datasource=github-releases depName=astral-sh/uv
+ENV UV_VERSION=0.11.8
+
+ADD https://github.com/astral-sh/uv/releases/download/${UV_VERSION}/uv-x86_64-unknown-linux-gnu.tar.gz /tmp/uv.tar.gz
+ADD https://github.com/astral-sh/uv/releases/download/${UV_VERSION}/uv-x86_64-unknown-linux-gnu.tar.gz.sha256 /tmp/uv.tar.gz.sha256
+
+RUN expected_sha=$(awk '{print $1}' /tmp/uv.tar.gz.sha256) && \
+    echo "${expected_sha}  /tmp/uv.tar.gz" | sha256sum -c - && \
+    tar -xzf /tmp/uv.tar.gz -C /tmp/ && \
+    /tmp/uv-x86_64-unknown-linux-gnu/uv --version
+
 
 # ============================================================================
 # final - runtime image
@@ -93,6 +105,9 @@ ENV LIBICU_VERSION=76.1-4
 # renovate: datasource=github-tags depName=nodejs/node extractVersion=^v(?<version>.*)$
 ENV NODE_VERSION=24.15.0
 
+# renovate: datasource=repology depName=debian_13/python3.13 versioning=deb
+ENV PYTHON3_VERSION=3.13.5-1
+
 # Bring keyrings + source list in from `build`.
 COPY --from=build /etc/apt/keyrings/nodesource.gpg /etc/apt/keyrings/nodesource.gpg
 COPY --from=build /etc/apt/sources.list.d/nodesource.list /etc/apt/sources.list.d/nodesource.list
@@ -101,12 +116,17 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         fontconfig="${FONTCONFIG_VERSION}" \
         libicu76="${LIBICU_VERSION}" \
-        "nodejs=${NODE_VERSION}-1nodesource1" && \
+        "nodejs=${NODE_VERSION}-1nodesource1" \
+        "python3=${PYTHON3_VERSION}" && \
     rm -rf /var/lib/apt/lists/*
 
 # .NET SDKs 9 + 10
 COPY --from=build /usr/share/dotnet /usr/share/dotnet
 RUN ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
+
+# --- uv ------------------------------------------------------------------
+COPY --from=build /tmp/uv-x86_64-unknown-linux-gnu/uv /usr/local/bin/uv
+COPY --from=build /tmp/uv-x86_64-unknown-linux-gnu/uvx /usr/local/bin/uvx
 
 # --- Node package managers (npm, yarn, pnpm) -----------------------------
 # renovate: datasource=github-tags depName=npm/cli extractVersion=^v(?<version>.*)$
@@ -135,6 +155,11 @@ ENV DOTNET_NOLOGO=true \
     NUGET_XMLDOC_MODE=skip \
     PATH="/usr/share/dotnet:${PATH}"
 
+# Prevent uv from downloading Python (use system-installed python3) and use
+# copy link mode which is safe inside containers.
+ENV UV_PYTHON_DOWNLOADS=never \
+    UV_LINK_MODE=copy
+
 # Inline smoke tests + cleanup in one layer.
 RUN dotnet --version && \
     dotnet --list-sdks | grep "^9\\." && \
@@ -143,6 +168,8 @@ RUN dotnet --version && \
     npm --version && \
     yarn --version && \
     pnpm --version && \
+    python3 --version && \
+    uv --version && \
     fc-list | head -n1 && \
     apt-get clean && \
     rm -rf \
@@ -167,6 +194,8 @@ RUN dotnet --version && \
     npm --version && \
     yarn --version && \
     pnpm --version && \
+    python3 --version && \
+    uv --version && \
     fc-list --version
 
 # --- .NET env vars are actually exported --------------------------------
@@ -188,6 +217,10 @@ EOF
 # --- Functional: Node runs scripts --------------------------------------
 # hadolint ignore=DL3059
 RUN test "$(echo 'console.log(2 + 2)' | node)" = "4"
+
+# --- Functional: uv uses system Python 3.13 ----------------------------
+# hadolint ignore=DL3059
+RUN uv run --no-project --python python3 python3 -c "import sys; assert sys.version_info >= (3, 13), sys.version"
 
 # --- Functional: Yarn and pnpm reach their respective registries --------
 # Exercises outbound HTTPS + package manager resolution without a full install.
