@@ -106,7 +106,7 @@ ENV LIBICU_VERSION=76.1-4
 ENV NODE_VERSION=24.15.0
 
 # renovate: datasource=repology depName=debian_13/python3.13 versioning=deb
-ENV PYTHON3_VERSION=3.13.5-1
+ENV PYTHON3_VERSION=3.13.5-2
 
 # Bring keyrings + source list in from `build`.
 COPY --from=build /etc/apt/keyrings/nodesource.gpg /etc/apt/keyrings/nodesource.gpg
