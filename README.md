@@ -63,6 +63,8 @@ Build runtimes image for compiling and packaging .NET and Node.js applications.
 - Node.js 24
 - npm, Yarn, pnpm
 - fontconfig
+- python
+- uv
 
 ### `azure-pipelines-janus`
 
