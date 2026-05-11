@@ -105,7 +105,7 @@ ENV LIBICU_VERSION=76.1-4
 # renovate: datasource=github-tags depName=nodejs/node extractVersion=^v(?<version>.*)$
 ENV NODE_VERSION=24.15.0
 
-# renovate: datasource=repology depName=debian_13/python3.13 versioning=deb
+# renovate: datasource=repology depName=debian_13/python3-defaults versioning=deb
 ENV PYTHON3_VERSION=3.13.5-1
 
 # Bring keyrings + source list in from `build`.
