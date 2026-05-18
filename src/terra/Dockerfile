@@ -199,7 +199,7 @@ ENV UNZIP_VERSION=6.0-29
 # renovate: datasource=github-tags depName=docker/cli extractVersion=^v(?<version>.*)$
 ENV DOCKER_CLI_VERSION=29.4.3
 # renovate: datasource=github-tags depName=docker/buildx extractVersion=^v(?<version>.*)$
-ENV DOCKER_BUILDX_VERSION=0.33.0
+ENV DOCKER_BUILDX_VERSION=0.34.0
 # renovate: datasource=github-tags depName=docker/compose extractVersion=^v(?<version>.*)$
 ENV DOCKER_COMPOSE_VERSION=5.1.3
 
