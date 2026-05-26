@@ -114,7 +114,7 @@ jobs:
       # Builds all preceding stages (base, build, final) on the way — any
       # build failure or assertion failure fails this step.
       - name: Validate (build + smoke test)
-        uses: docker/bake-action@a66e1c87e2eca0503c343edf1d208c716d54b8a8 # v7.1.0
+        uses: docker/bake-action@6614cfa25eff9a0b2b2697efb0b6159e7680d584 # v7.2.0
         with:
           targets: validate
         env:
@@ -125,7 +125,7 @@ jobs:
       # this step is skipped — nothing gets published.
       - name: Build and push
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: docker/bake-action@a66e1c87e2eca0503c343edf1d208c716d54b8a8 # v7.1.0
+        uses: docker/bake-action@6614cfa25eff9a0b2b2697efb0b6159e7680d584 # v7.2.0
         with:
           targets: default
           push: true
