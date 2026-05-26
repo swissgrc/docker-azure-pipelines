@@ -130,7 +130,7 @@ COPY --from=build /tmp/uv-x86_64-unknown-linux-gnu/uvx /usr/local/bin/uvx
 
 # --- Node package managers (npm, yarn, pnpm) -----------------------------
 # renovate: datasource=github-tags depName=npm/cli extractVersion=^v(?<version>.*)$
-ENV NPM_VERSION=11.14.1
+ENV NPM_VERSION=11.15.0
 # renovate: datasource=github-tags depName=yarnpkg/yarn extractVersion=^v(?<version>.*)$
 ENV YARN_VERSION=1.22.22
 # renovate: datasource=github-tags depName=pnpm/pnpm extractVersion=^v(?<version>.*)$
