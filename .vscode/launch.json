@@ -40,6 +40,14 @@
       "dockerfile": "src/mercury/Dockerfile",
       "contextPath": "${workspaceFolder}",
       "stopOnEntry": true
+    },
+    {
+      "type": "dockerfile",
+      "request": "launch",
+      "name": "Docker: sancus",
+      "dockerfile": "src/sancus/Dockerfile",
+      "contextPath": "${workspaceFolder}",
+      "stopOnEntry": true
     }
   ]
 }
