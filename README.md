@@ -36,6 +36,7 @@ The following example shows a build step using the `vulcan` image (.NET + Node.j
 | [`azure-pipelines-janus`](https://github.com/swissgrc/docker-azure-pipelines/pkgs/container/azure-pipelines-janus)     | L3a deployment         | `vulcan`         |
 | [`azure-pipelines-mercury`](https://github.com/swissgrc/docker-azure-pipelines/pkgs/container/azure-pipelines-mercury) | L3b end-to-end testing | `vulcan`         |
 | [`azure-pipelines-hermes`](https://github.com/swissgrc/docker-azure-pipelines/pkgs/container/azure-pipelines-hermes)   | L3c dependency updates | `vulcan`         |
+| [`azure-pipelines-sancus`](https://github.com/swissgrc/docker-azure-pipelines/pkgs/container/azure-pipelines-sancus)   | L3d code signing       | `vulcan`         |
 
 All images are published to [GHCR] under `ghcr.io/swissgrc/`.
 
@@ -94,6 +95,16 @@ Dependency updates image for running [Renovate] self-hosted.
 
 - Everything from `vulcan`
 - Renovate
+
+### `azure-pipelines-sancus`
+
+Code-signing image for Authenticode-signing executables, installers, and scripts.
+
+- Everything from `vulcan`
+- Azure CLI (for Azure Key Vault / Trusted Signing authentication)
+- jsign (Java Authenticode code-signing tool)
+- OpenJDK 21 JRE (headless) — the jsign runtime
+- osslsigncode (signature verification)
 
 ## Tags
 

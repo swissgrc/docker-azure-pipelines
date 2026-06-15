@@ -53,11 +53,11 @@ function "cache_to" {
 }
 
 group "default" {
-  targets = ["terra", "vulcan", "janus", "mercury", "hermes"]
+  targets = ["terra", "vulcan", "janus", "mercury", "hermes", "sancus"]
 }
 
 group "validate" {
-  targets = ["terra-test", "vulcan-test", "janus-test", "mercury-test", "hermes-test"]
+  targets = ["terra-test", "vulcan-test", "janus-test", "mercury-test", "hermes-test", "sancus-test"]
 }
 
 target "_common" {
@@ -123,6 +123,17 @@ target "hermes" {
   cache-to   = cache_to("hermes")
 }
 
+target "sancus" {
+  inherits = ["_common"]
+  context  = "src/sancus"
+  contexts = {
+    "${image("vulcan")}:${VERSION}" = "target:vulcan"
+  }
+  tags       = tags("sancus")
+  cache-from = cache_from("sancus")
+  cache-to   = cache_to("sancus")
+}
+
 // --- Test targets -----------------------------------------------------------
 // Each inherits its build target (so contexts + args propagate), overrides
 // `target` to build the Dockerfile `test` stage, and discards the result
@@ -154,6 +165,12 @@ target "mercury-test" {
 
 target "hermes-test" {
   inherits = ["hermes"]
+  target   = "test"
+  output   = ["type=cacheonly"]
+}
+
+target "sancus-test" {
+  inherits = ["sancus"]
   target   = "test"
   output   = ["type=cacheonly"]
 }

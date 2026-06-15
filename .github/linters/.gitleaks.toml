@@ -2,5 +2,8 @@
 useDefault = true
 
 [allowlist]
-description = "Anthropic's public Claude CLI PGP signing-key fingerprint — a public key identifier, not a secret."
-regexes = ['''31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE''']
+description = "Public PGP signing-key fingerprints (public key identifiers, not secrets): Anthropic Claude CLI, and jsign (Emmanuel Bourg)."
+regexes = [
+  '''31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE''',
+  '''B8CE4DE21080DCF903E16C40F513C419E4B9D0AC''',
+]

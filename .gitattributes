@@ -1,0 +1,8 @@
+# Dockerfiles embed heredoc shell scripts (`RUN <<'EOF'`).
+#
+# With git autocrlf=true on Windows they would be checked out with CRLF,
+# which breaks `set -o pipefail` and every other heredoc line when built
+# locally via `docker buildx bake`.
+#
+# Force LF so local builds work on every platform.
+Dockerfile text eol=lf
