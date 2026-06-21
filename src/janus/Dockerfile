@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.24
+# syntax=docker/dockerfile:1.25
 
 # BASE_TAG is overridden by CI (`--build-arg BASE_TAG=<tag>`); the default
 # here keeps `docker buildx build src/janus` working without flags.
