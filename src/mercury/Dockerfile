@@ -28,7 +28,7 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
       org.opencontainers.image.documentation="https://github.com/swissgrc/docker-azure-pipelines"
 
 # renovate: datasource=npm depName=playwright
-ENV PLAYWRIGHT_VERSION=1.60.0
+ENV PLAYWRIGHT_VERSION=1.61.0
 
 # Matches the official Playwright image path. Downstream pipelines inherit
 # this env var and find browsers without extra configuration.
