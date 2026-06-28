@@ -134,7 +134,7 @@ ENV NPM_VERSION=11.17.0
 # renovate: datasource=github-tags depName=yarnpkg/yarn extractVersion=^v(?<version>.*)$
 ENV YARN_VERSION=1.22.22
 # renovate: datasource=github-tags depName=pnpm/pnpm extractVersion=^v(?<version>.*)$
-ENV PNPM_VERSION=11.8.0
+ENV PNPM_VERSION=11.9.0
 
 RUN npm install -g --ignore-scripts \
         "npm@${NPM_VERSION}" \
