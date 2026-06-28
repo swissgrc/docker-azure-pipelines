@@ -103,7 +103,7 @@ ENV FONTCONFIG_VERSION=2.15.0-2.3
 ENV LIBICU_VERSION=76.1-4
 
 # renovate: datasource=github-tags depName=nodejs/node extractVersion=^v(?<version>.*)$
-ENV NODE_VERSION=24.17.0
+ENV NODE_VERSION=24.18.0
 
 # renovate: datasource=repology depName=debian_13/python3-defaults versioning=deb
 ENV PYTHON3_VERSION=3.13.5-1
