@@ -86,7 +86,7 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
       org.opencontainers.image.documentation="https://github.com/swissgrc/docker-azure-pipelines"
 
 # renovate: datasource=github-tags depName=Azure/azure-cli extractVersion=^azure-cli-(?<version>.*)$
-ENV AZURE_CLI_VERSION=2.87.0
+ENV AZURE_CLI_VERSION=2.88.0
 
 # Headless JRE that runs jsign (no GUI/AWT needed for signing). Its hard
 # dependency on ca-certificates-java populates Java's truststore, which jsign
