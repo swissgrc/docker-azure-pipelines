@@ -67,7 +67,7 @@ RUN sha256_col=$(awk '$0=="SHA-256" {print NR; exit}' /tmp/yq-hashes-order) && \
 
 # --- Git from source ------------------------------------------------------
 # renovate: datasource=github-tags depName=git/git extractVersion=^v(?<version>.*)$
-ENV GIT_VERSION=2.54.0
+ENV GIT_VERSION=2.55.0
 
 # Repology has no debian_13 data for build-essential, so we query the apt
 # archive directly via Renovate's `deb` datasource.
@@ -103,9 +103,11 @@ RUN apt-get update && \
 # would require `cd` into the source tree. sysconfdir=/etc matches Debian's
 # layout so `git config --system` and `git lfs install --system` write to
 # /etc/gitconfig, not /usr/etc/gitconfig.
+# NO_RUST: since 2.55 Git builds Rust subsystems by default, requiring cargo.
+# Opt out until we add a Rust toolchain — the knob is removed in Git 3.0.
 ADD https://github.com/git/git/archive/refs/tags/v${GIT_VERSION}.tar.gz /tmp/git.tar.gz
 RUN tar -xzf /tmp/git.tar.gz -C /tmp && \
-    make -C "/tmp/git-${GIT_VERSION}" prefix=/usr sysconfdir=/etc -j"$(nproc)" install && \
+    make -C "/tmp/git-${GIT_VERSION}" prefix=/usr sysconfdir=/etc NO_RUST=1 -j"$(nproc)" install && \
     git --version
 
 # --- Git LFS (upstream tarball; avoids APT pulling in `git` + Perl transitively)
