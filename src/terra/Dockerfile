@@ -26,7 +26,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # --- APT helpers (build-stage only) ---------------------------------------
 # renovate: datasource=repology depName=debian_13/curl versioning=deb
-ENV CURL_VERSION=8.14.1-2+deb13u3
+ENV CURL_VERSION=8.14.1-2+deb13u4
 # renovate: datasource=repology depName=debian_13/gnupg2 versioning=deb
 ENV GNUPG_VERSION=2.4.7-21+deb13u1
 # renovate: datasource=repology depName=debian_13/lsb-release versioning=deb
@@ -78,7 +78,7 @@ ENV DH_AUTORECONF_VERSION=20
 # renovate: datasource=repology depName=debian_13/gettext versioning=deb
 ENV GETTEXT_VERSION=0.23.1-2
 # renovate: datasource=repology depName=debian_13/libcurl4-gnutls-dev versioning=deb
-ENV LIBCURL4_GNUTLS_DEV_VERSION=8.14.1-2+deb13u3
+ENV LIBCURL4_GNUTLS_DEV_VERSION=8.14.1-2+deb13u4
 # renovate: datasource=repology depName=debian_13/libexpat1-dev versioning=deb
 ENV LIBEXPAT1_DEV_VERSION=2.7.1-2
 # renovate: datasource=repology depName=debian_13/openssl versioning=deb
@@ -190,9 +190,9 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
       org.opencontainers.image.documentation="https://github.com/swissgrc/docker-azure-pipelines"
 
 # renovate: datasource=repology depName=debian_13/curl versioning=deb
-ENV CURL_VERSION=8.14.1-2+deb13u3
+ENV CURL_VERSION=8.14.1-2+deb13u4
 # renovate: datasource=repology depName=debian_13/curl versioning=deb
-ENV LIBCURL3_GNUTLS_VERSION=8.14.1-2+deb13u3
+ENV LIBCURL3_GNUTLS_VERSION=8.14.1-2+deb13u4
 # renovate: datasource=repology depName=debian_13/unzip versioning=deb
 ENV UNZIP_VERSION=6.0-29
 
