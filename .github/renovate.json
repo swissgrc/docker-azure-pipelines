@@ -31,6 +31,12 @@
       "allowedVersions": "/^\\d*[02468]\\./"
     },
     {
+      "description": "Group curl packages together",
+      "matchDatasources": ["repology"],
+      "matchPackageNames": ["debian_13/curl", "debian_13/libcurl4-gnutls-dev"],
+      "groupName": "curl"
+    },
+    {
       "description": "Claude CLI + Copilot CLI: batch into at most one PR per day",
       "matchPackageNames": ["@anthropic-ai/claude-code", "github/copilot-cli"],
       "schedule": ["before 5am"]
