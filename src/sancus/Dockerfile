@@ -49,7 +49,7 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
 # code-signing tool. Renovate bumps JSIGN_VERSION; the signature is fetched
 # fresh at build time, so there is no committed hash to rot.
 # renovate: datasource=maven depName=net.jsign:jsign
-ENV JSIGN_VERSION=7.4
+ENV JSIGN_VERSION=7.5
 
 # Fingerprint of "Emmanuel Bourg <ebourg@apache.org>" (verified on
 # keys.openpgp.org). This pin is the trust anchor: we assert the fetched key
