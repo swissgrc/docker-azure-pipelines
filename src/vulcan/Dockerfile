@@ -69,7 +69,7 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
 
 # --- uv ------------------------------------------------------------------
 # renovate: datasource=github-releases depName=astral-sh/uv
-ENV UV_VERSION=0.11.28
+ENV UV_VERSION=0.11.29
 
 ADD https://github.com/astral-sh/uv/releases/download/${UV_VERSION}/uv-x86_64-unknown-linux-gnu.tar.gz /tmp/uv.tar.gz
 ADD https://github.com/astral-sh/uv/releases/download/${UV_VERSION}/uv-x86_64-unknown-linux-gnu.tar.gz.sha256 /tmp/uv.tar.gz.sha256
