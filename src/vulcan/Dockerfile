@@ -31,7 +31,7 @@ RUN apt-get update && \
 
 # --- .NET SDK 9 (bypasses dotnet-install.sh) -----------------------------
 # renovate: datasource=dotnet-version depName=dotnet-sdk
-ENV DOTNET9_VERSION=9.0.315
+ENV DOTNET9_VERSION=9.0.316
 
 ADD https://builds.dotnet.microsoft.com/dotnet/Sdk/${DOTNET9_VERSION}/dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz /tmp/
 ADD https://builds.dotnet.microsoft.com/dotnet/Sdk/${DOTNET9_VERSION}/dotnet-sdk-${DOTNET9_VERSION}-linux-x64.tar.gz.sha512 /tmp/
@@ -46,7 +46,7 @@ RUN expected_sha=$(awk '{print $1}' "/tmp/dotnet-sdk-${DOTNET9_VERSION}-linux-x6
 
 # --- .NET SDK 10 (bypasses dotnet-install.sh) ----------------------------
 # renovate: datasource=dotnet-version depName=dotnet-sdk
-ENV DOTNET10_VERSION=10.0.301
+ENV DOTNET10_VERSION=10.0.302
 
 ADD https://builds.dotnet.microsoft.com/dotnet/Sdk/${DOTNET10_VERSION}/dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz /tmp/
 ADD https://builds.dotnet.microsoft.com/dotnet/Sdk/${DOTNET10_VERSION}/dotnet-sdk-${DOTNET10_VERSION}-linux-x64.tar.gz.sha512 /tmp/
