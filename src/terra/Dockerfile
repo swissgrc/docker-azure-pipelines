@@ -118,8 +118,8 @@ ENV GIT_LFS_VERSION=3.7.1
 # (`<hash> *<file>`). We verify the hash only — the `*FILENAME` pattern also
 # naturally excludes the PGP headers/footers from the grep.
 RUN base="https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}" && \
-    curl -fsSL -o /tmp/git-lfs.tar.gz     "${base}/git-lfs-linux-amd64-v${GIT_LFS_VERSION}.tar.gz" && \
-    curl -fsSL -o /tmp/git-lfs-sha256.asc "${base}/sha256sums.asc" && \
+    curl --proto '=https' -fsSL -o /tmp/git-lfs.tar.gz     "${base}/git-lfs-linux-amd64-v${GIT_LFS_VERSION}.tar.gz" && \
+    curl --proto '=https' -fsSL -o /tmp/git-lfs-sha256.asc "${base}/sha256sums.asc" && \
     expected_sha=$(grep -E "\*git-lfs-linux-amd64-v${GIT_LFS_VERSION}\.tar\.gz$" /tmp/git-lfs-sha256.asc | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/git-lfs.tar.gz" | sha256sum -c - && \
     mkdir -p /tmp/git-lfs-extract && \
@@ -130,7 +130,7 @@ RUN base="https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSIO
 
 # --- Docker APT repo (key + source list; plugins installed in `final`) ---
 RUN install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | \
+    curl --proto '=https' -fsSL https://download.docker.com/linux/debian/gpg | \
         gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
     chmod a+r /etc/apt/keyrings/docker.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
@@ -147,15 +147,15 @@ ENV CLAUDE_KEY_FINGERPRINT=31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE
 ENV CLAUDE_RELEASES=https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases
 
 RUN GNUPGHOME="$(mktemp -d)" && export GNUPGHOME && \
-    curl -fsSL https://downloads.claude.ai/keys/claude-code.asc | gpg --import && \
+    curl --proto '=https' -fsSL https://downloads.claude.ai/keys/claude-code.asc | gpg --import && \
     gpg --list-keys --with-colons --fingerprint | \
         awk -F: '/^fpr:/ {print $10; exit}' | \
         grep -qx "${CLAUDE_KEY_FINGERPRINT}" && \
-    curl -fsSL -o /tmp/manifest.json     "${CLAUDE_RELEASES}/${CLAUDE_VERSION}/manifest.json" && \
-    curl -fsSL -o /tmp/manifest.json.sig "${CLAUDE_RELEASES}/${CLAUDE_VERSION}/manifest.json.sig" && \
+    curl --proto '=https' -fsSL -o /tmp/manifest.json     "${CLAUDE_RELEASES}/${CLAUDE_VERSION}/manifest.json" && \
+    curl --proto '=https' -fsSL -o /tmp/manifest.json.sig "${CLAUDE_RELEASES}/${CLAUDE_VERSION}/manifest.json.sig" && \
     gpg --verify /tmp/manifest.json.sig /tmp/manifest.json && \
     expected_sha=$(/tmp/jq -r '.platforms."linux-x64".checksum' /tmp/manifest.json) && \
-    curl -fsSL -o /tmp/claude "${CLAUDE_RELEASES}/${CLAUDE_VERSION}/linux-x64/claude" && \
+    curl --proto '=https' -fsSL -o /tmp/claude "${CLAUDE_RELEASES}/${CLAUDE_VERSION}/linux-x64/claude" && \
     echo "${expected_sha}  /tmp/claude" | sha256sum -c - && \
     chmod +x /tmp/claude && \
     /tmp/claude --version && \
@@ -166,8 +166,8 @@ RUN GNUPGHOME="$(mktemp -d)" && export GNUPGHOME && \
 ENV COPILOT_VERSION=1.0.71
 
 RUN base="https://github.com/github/copilot-cli/releases/download/v${COPILOT_VERSION}" && \
-    curl -fsSL -o /tmp/copilot.tar.gz "${base}/copilot-linux-x64.tar.gz" && \
-    curl -fsSL -o /tmp/SHA256SUMS.txt "${base}/SHA256SUMS.txt" && \
+    curl --proto '=https' -fsSL -o /tmp/copilot.tar.gz "${base}/copilot-linux-x64.tar.gz" && \
+    curl --proto '=https' -fsSL -o /tmp/SHA256SUMS.txt "${base}/SHA256SUMS.txt" && \
     expected_sha=$(grep -E '[[:space:]]copilot-linux-x64\.tar\.gz$' /tmp/SHA256SUMS.txt | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/copilot.tar.gz" | sha256sum -c - && \
     mkdir -p /tmp/copilot-extract && \

@@ -61,7 +61,7 @@ RUN expected_sha=$(awk '{print $1}' "/tmp/dotnet-sdk-${DOTNET10_VERSION}-linux-x
 
 # --- NodeSource APT repo (keyring + source list; nodejs installed in `final`)
 RUN install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | \
+    curl --proto '=https' -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | \
         gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
     chmod a+r /etc/apt/keyrings/nodesource.gpg && \
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main" \

@@ -34,7 +34,7 @@ RUN apt-get update && \
 # --- Azure CLI APT repo (key + source list; package installed in `final`) -
 # Microsoft does not publish a `trixie` suite; hardcode `bookworm`.
 RUN install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | \
+    curl --proto '=https' -fsSL https://packages.microsoft.com/keys/microsoft.asc | \
         gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg && \
     chmod a+r /etc/apt/keyrings/microsoft.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ bookworm main" \
@@ -60,9 +60,9 @@ ENV JSIGN_KEY_FINGERPRINT=B8CE4DE21080DCF903E16C40F513C419E4B9D0AC
 
 RUN GNUPGHOME="$(mktemp -d)" && export GNUPGHOME && \
     base="https://repo1.maven.org/maven2/net/jsign/jsign/${JSIGN_VERSION}" && \
-    curl -fsSL -o /tmp/jsign.jar     "${base}/jsign-${JSIGN_VERSION}.jar" && \
-    curl -fsSL -o /tmp/jsign.jar.asc "${base}/jsign-${JSIGN_VERSION}.jar.asc" && \
-    curl -fsSL "https://keys.openpgp.org/vks/v1/by-fingerprint/${JSIGN_KEY_FINGERPRINT}" | \
+    curl --proto '=https' -fsSL -o /tmp/jsign.jar     "${base}/jsign-${JSIGN_VERSION}.jar" && \
+    curl --proto '=https' -fsSL -o /tmp/jsign.jar.asc "${base}/jsign-${JSIGN_VERSION}.jar.asc" && \
+    curl --proto '=https' -fsSL "https://keys.openpgp.org/vks/v1/by-fingerprint/${JSIGN_KEY_FINGERPRINT}" | \
         gpg --import && \
     gpg --list-keys --with-colons --fingerprint | \
         awk -F: '/^fpr:/ {print $10; exit}' | \
