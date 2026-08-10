@@ -2,6 +2,15 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>swissgrc/renovate-presets:docker"],
   "timezone": "Europe/Zurich",
+  "customDatasources": {
+    "debian": {
+      "description": "Debian madison API: covers trixie plus proposed-updates, where security uploads land the same day (trixie-security itself only publishes xz indexes, which Renovate's deb datasource cannot read yet)",
+      "defaultRegistryUrlTemplate": "https://api.ftp-master.debian.org/madison?package={{packageName}}&s=trixie,trixie-proposed-updates,trixie-updates&a=amd64,all&f=json",
+      "transformTemplates": [
+        "{ \"releases\": [$map($keys($merge([$$[0].*.*])), function($v) { { \"version\": $v } })] }"
+      ]
+    }
+  },
   "packageRules": [
     {
       "description": "Pin DOTNET9_VERSION to the .NET 9 major line",
@@ -32,8 +41,8 @@
     },
     {
       "description": "Group curl packages together",
-      "matchDatasources": ["repology"],
-      "matchPackageNames": ["debian_13/curl", "debian_13/libcurl4-gnutls-dev"],
+      "matchDatasources": ["custom.debian"],
+      "matchPackageNames": ["curl", "libcurl3t64-gnutls", "libcurl4-gnutls-dev"],
       "groupName": "curl"
     },
     {

@@ -7,7 +7,7 @@ FROM debian:13.6-slim@sha256:020c0d20b9880058cbe785a9db107156c3c75c2ac944a6aa7ab
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# renovate: datasource=repology depName=debian_13/ca-certificates versioning=loose
+# renovate: datasource=custom.debian depName=ca-certificates versioning=deb
 ENV CA_CERTIFICATES_VERSION=20250419
 
 RUN apt-get update && \
@@ -25,11 +25,11 @@ FROM base AS build
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # --- APT helpers (build-stage only) ---------------------------------------
-# renovate: datasource=repology depName=debian_13/curl versioning=deb
+# renovate: datasource=custom.debian depName=curl versioning=deb
 ENV CURL_VERSION=8.14.1-2+deb13u4
-# renovate: datasource=repology depName=debian_13/gnupg2 versioning=deb
+# renovate: datasource=custom.debian depName=gnupg versioning=deb
 ENV GNUPG_VERSION=2.4.7-21+deb13u1
-# renovate: datasource=repology depName=debian_13/lsb-release versioning=deb
+# renovate: datasource=custom.debian depName=lsb-release versioning=deb
 ENV LSB_RELEASE_VERSION=12.1-1
 
 RUN apt-get update && \
@@ -69,21 +69,19 @@ RUN sha256_col=$(awk '$0=="SHA-256" {print NR; exit}' /tmp/yq-hashes-order) && \
 # renovate: datasource=github-tags depName=git/git extractVersion=^v(?<version>.*)$
 ENV GIT_VERSION=2.55.0
 
-# Repology has no debian_13 data for build-essential, so we query the apt
-# archive directly via Renovate's `deb` datasource.
-# renovate: datasource=deb depName=build-essential registryUrl=https://deb.debian.org/debian?suite=trixie&components=main&binaryArch=amd64 versioning=deb
+# renovate: datasource=custom.debian depName=build-essential versioning=deb
 ENV BUILD_ESSENTIAL_VERSION=12.12
-# renovate: datasource=repology depName=debian_13/dh-autoreconf versioning=deb
+# renovate: datasource=custom.debian depName=dh-autoreconf versioning=deb
 ENV DH_AUTORECONF_VERSION=20
-# renovate: datasource=repology depName=debian_13/gettext versioning=deb
+# renovate: datasource=custom.debian depName=gettext versioning=deb
 ENV GETTEXT_VERSION=0.23.1-2
-# renovate: datasource=repology depName=debian_13/libcurl4-gnutls-dev versioning=deb
+# renovate: datasource=custom.debian depName=libcurl4-gnutls-dev versioning=deb
 ENV LIBCURL4_GNUTLS_DEV_VERSION=8.14.1-2+deb13u4
-# renovate: datasource=repology depName=debian_13/libexpat1-dev versioning=deb
+# renovate: datasource=custom.debian depName=libexpat1-dev versioning=deb
 ENV LIBEXPAT1_DEV_VERSION=2.7.1-2
-# renovate: datasource=repology depName=debian_13/openssl versioning=deb
+# renovate: datasource=custom.debian depName=libssl-dev versioning=deb
 ENV LIBSSL_DEV_VERSION=3.5.6-1~deb13u2
-# renovate: datasource=repology depName=debian_13/zlib versioning=deb
+# renovate: datasource=custom.debian depName=zlib1g-dev versioning=deb
 ENV ZLIB1G_DEV_VERSION=1:1.3.dfsg+really1.3.1-1+b1
 
 # Install Git build dependencies
@@ -191,11 +189,13 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
       org.opencontainers.image.title="azure-pipelines-terra" \
       org.opencontainers.image.documentation="https://github.com/swissgrc/docker-azure-pipelines"
 
-# renovate: datasource=repology depName=debian_13/curl versioning=deb
+# renovate: datasource=custom.debian depName=curl versioning=deb
 ENV CURL_VERSION=8.14.1-2+deb13u4
-# renovate: datasource=repology depName=debian_13/curl versioning=deb
+# trixie ships this as libcurl3t64-gnutls; the libcurl3-gnutls install name below
+# resolves via its versioned Provides, so we track the real (t64) binary here.
+# renovate: datasource=custom.debian depName=libcurl3t64-gnutls versioning=deb
 ENV LIBCURL3_GNUTLS_VERSION=8.14.1-2+deb13u4
-# renovate: datasource=repology depName=debian_13/unzip versioning=deb
+# renovate: datasource=custom.debian depName=unzip versioning=deb
 ENV UNZIP_VERSION=6.0-29
 
 # renovate: datasource=github-tags depName=docker/cli extractVersion=^v(?<version>.*)$

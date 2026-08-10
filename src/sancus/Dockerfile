@@ -23,7 +23,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # --- APT helpers (build-stage only) --------------------------------------
 # gnupg dearmors the Microsoft repo key and verifies the jsign PGP signature.
 # curl is inherited from terra.
-# renovate: datasource=repology depName=debian_13/gnupg2 versioning=deb
+# renovate: datasource=custom.debian depName=gnupg versioning=deb
 ENV GNUPG_VERSION=2.4.7-21+deb13u1
 
 RUN apt-get update && \
@@ -91,12 +91,12 @@ ENV AZURE_CLI_VERSION=2.88.0
 # Headless JRE that runs jsign (no GUI/AWT needed for signing). Its hard
 # dependency on ca-certificates-java populates Java's truststore, which jsign
 # needs for HTTPS calls to cloud KMS backends (e.g. Azure Key Vault).
-# renovate: datasource=repology depName=debian_13/openjdk-21 versioning=deb
+# renovate: datasource=custom.debian depName=openjdk-21-jre-headless versioning=deb
 ENV OPENJDK_VERSION=21.0.11+10-1~deb13u2
 
 # osslsigncode: independent Authenticode signature verification — jsign signs
 # but has no verify command of its own.
-# renovate: datasource=repology depName=debian_13/osslsigncode versioning=deb
+# renovate: datasource=custom.debian depName=osslsigncode versioning=deb
 ENV OSSLSIGNCODE_VERSION=2.9-2
 
 # Bring Microsoft keyring + source list in from `build`.

@@ -21,7 +21,7 @@ FROM base AS build
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # --- APT helpers (build-stage only) --------------------------------------
-# renovate: datasource=repology depName=debian_13/gnupg2 versioning=deb
+# renovate: datasource=custom.debian depName=gnupg versioning=deb
 ENV GNUPG_VERSION=2.4.7-21+deb13u1
 
 RUN apt-get update && \
@@ -94,18 +94,18 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
       org.opencontainers.image.title="azure-pipelines-vulcan" \
       org.opencontainers.image.documentation="https://github.com/swissgrc/docker-azure-pipelines"
 
-# renovate: datasource=repology depName=debian_13/fontconfig versioning=deb
+# renovate: datasource=custom.debian depName=fontconfig versioning=deb
 ENV FONTCONFIG_VERSION=2.15.0-2.3
 
 # .NET needs ICU for globalization (TimeZone/CultureInfo init). Microsoft
 # Only ICU is not yet shipped from terra base images
-# renovate: datasource=repology depName=debian_13/icu versioning=deb
+# renovate: datasource=custom.debian depName=libicu76 versioning=deb
 ENV LIBICU_VERSION=76.1-4
 
 # renovate: datasource=github-tags depName=nodejs/node extractVersion=^v(?<version>.*)$
 ENV NODE_VERSION=24.19.0
 
-# renovate: datasource=repology depName=debian_13/python3-defaults versioning=deb
+# renovate: datasource=custom.debian depName=python3 versioning=deb
 ENV PYTHON3_VERSION=3.13.5-1
 
 # Bring keyrings + source list in from `build`.
