@@ -33,7 +33,7 @@ RUN apt-get update && \
 # --- Azure CLI APT repo (key + source list; package installed in `final`) -
 # Microsoft does not publish a `trixie` suite; hardcode `bookworm`.
 RUN install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | \
+    curl --proto '=https' -fsSL https://packages.microsoft.com/keys/microsoft.asc | \
         gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg && \
     chmod a+r /etc/apt/keyrings/microsoft.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ bookworm main" \
@@ -44,8 +44,8 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
 ENV TERRAFORM_VERSION=1.15.8
 
 RUN base="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}" && \
-    curl -fsSL -o /tmp/terraform.zip "${base}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
-    curl -fsSL -o /tmp/terraform_SHA256SUMS "${base}/terraform_${TERRAFORM_VERSION}_SHA256SUMS" && \
+    curl --proto '=https' -fsSL -o /tmp/terraform.zip "${base}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+    curl --proto '=https' -fsSL -o /tmp/terraform_SHA256SUMS "${base}/terraform_${TERRAFORM_VERSION}_SHA256SUMS" && \
     expected_sha=$(grep -E '[[:space:]]terraform_'"${TERRAFORM_VERSION}"'_linux_amd64\.zip$' /tmp/terraform_SHA256SUMS | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/terraform.zip" | sha256sum -c - && \
     unzip -q /tmp/terraform.zip terraform -d /tmp && \
@@ -57,8 +57,8 @@ RUN base="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}" && \
 ENV PACKER_VERSION=1.15.4
 
 RUN base="https://releases.hashicorp.com/packer/${PACKER_VERSION}" && \
-    curl -fsSL -o /tmp/packer.zip "${base}/packer_${PACKER_VERSION}_linux_amd64.zip" && \
-    curl -fsSL -o /tmp/packer_SHA256SUMS "${base}/packer_${PACKER_VERSION}_SHA256SUMS" && \
+    curl --proto '=https' -fsSL -o /tmp/packer.zip "${base}/packer_${PACKER_VERSION}_linux_amd64.zip" && \
+    curl --proto '=https' -fsSL -o /tmp/packer_SHA256SUMS "${base}/packer_${PACKER_VERSION}_SHA256SUMS" && \
     expected_sha=$(grep -E '[[:space:]]packer_'"${PACKER_VERSION}"'_linux_amd64\.zip$' /tmp/packer_SHA256SUMS | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/packer.zip" | sha256sum -c - && \
     unzip -q /tmp/packer.zip packer -d /tmp && \
@@ -70,8 +70,8 @@ RUN base="https://releases.hashicorp.com/packer/${PACKER_VERSION}" && \
 ENV TFLINT_VERSION=0.63.1
 
 RUN base="https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}" && \
-    curl -fsSL -o /tmp/tflint.zip "${base}/tflint_linux_amd64.zip" && \
-    curl -fsSL -o /tmp/tflint_checksums.txt "${base}/checksums.txt" && \
+    curl --proto '=https' -fsSL -o /tmp/tflint.zip "${base}/tflint_linux_amd64.zip" && \
+    curl --proto '=https' -fsSL -o /tmp/tflint_checksums.txt "${base}/checksums.txt" && \
     expected_sha=$(grep -E '[[:space:]]tflint_linux_amd64\.zip$' /tmp/tflint_checksums.txt | awk '{print $1}') && \
     echo "${expected_sha}  /tmp/tflint.zip" | sha256sum -c - && \
     unzip -q /tmp/tflint.zip tflint -d /tmp && \
@@ -83,8 +83,10 @@ RUN base="https://github.com/terraform-linters/tflint/releases/download/v${TFLIN
 ENV HELM_VERSION=4.2.3
 
 RUN base="https://get.helm.sh" && \
-    curl -fsSL -o /tmp/helm.tar.gz "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz" && \
-    curl -fsSL -o /tmp/helm.tar.gz.sha256 "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256" && \
+    curl --proto '=https' -fsSL -o /tmp/helm.tar.gz \
+      "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz" && \
+    curl --proto '=https' -fsSL -o /tmp/helm.tar.gz.sha256 \
+      "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256" && \
     expected_sha=$(awk '{print $1}' /tmp/helm.tar.gz.sha256) && \
     echo "${expected_sha}  /tmp/helm.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/helm.tar.gz -C /tmp --strip-components=1 linux-amd64/helm && \
@@ -96,8 +98,8 @@ RUN base="https://get.helm.sh" && \
 ENV KUBECTL_VERSION=1.36.2
 
 RUN base="https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64" && \
-    curl -fsSL -o /tmp/kubectl "${base}/kubectl" && \
-    curl -fsSL -o /tmp/kubectl.sha256 "${base}/kubectl.sha256" && \
+    curl --proto '=https' -fsSL -o /tmp/kubectl "${base}/kubectl" && \
+    curl --proto '=https' -fsSL -o /tmp/kubectl.sha256 "${base}/kubectl.sha256" && \
     expected_sha=$(awk '{print $1}' /tmp/kubectl.sha256) && \
     echo "${expected_sha}  /tmp/kubectl" | sha256sum -c - && \
     chmod +x /tmp/kubectl && \
@@ -109,8 +111,8 @@ RUN base="https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64" && \
 ENV KUBELOGIN_VERSION=0.2.19
 
 RUN base="https://github.com/Azure/kubelogin/releases/download/v${KUBELOGIN_VERSION}" && \
-    curl -fsSL -o /tmp/kubelogin.zip "${base}/kubelogin-linux-amd64.zip" && \
-    curl -fsSL -o /tmp/kubelogin.zip.sha256 "${base}/kubelogin-linux-amd64.zip.sha256" && \
+    curl --proto '=https' -fsSL -o /tmp/kubelogin.zip "${base}/kubelogin-linux-amd64.zip" && \
+    curl --proto '=https' -fsSL -o /tmp/kubelogin.zip.sha256 "${base}/kubelogin-linux-amd64.zip.sha256" && \
     expected_sha=$(awk '{print $1}' /tmp/kubelogin.zip.sha256) && \
     echo "${expected_sha}  /tmp/kubelogin.zip" | sha256sum -c - && \
     unzip -jq /tmp/kubelogin.zip bin/linux_amd64/kubelogin -d /tmp && \
