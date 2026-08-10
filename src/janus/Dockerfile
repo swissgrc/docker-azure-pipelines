@@ -83,8 +83,10 @@ RUN base="https://github.com/terraform-linters/tflint/releases/download/v${TFLIN
 ENV HELM_VERSION=4.2.3
 
 RUN base="https://get.helm.sh" && \
-    curl --proto '=https' -fsSL -o /tmp/helm.tar.gz "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz" && \
-    curl --proto '=https' -fsSL -o /tmp/helm.tar.gz.sha256 "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256" && \
+    curl --proto '=https' -fsSL -o /tmp/helm.tar.gz \
+      "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz" && \
+    curl --proto '=https' -fsSL -o /tmp/helm.tar.gz.sha256 \
+      "${base}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256" && \
     expected_sha=$(awk '{print $1}' /tmp/helm.tar.gz.sha256) && \
     echo "${expected_sha}  /tmp/helm.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/helm.tar.gz -C /tmp --strip-components=1 linux-amd64/helm && \
