@@ -78,7 +78,7 @@ ENV GETTEXT_VERSION=0.23.1-2
 # renovate: datasource=custom.debian depName=libcurl4-gnutls-dev versioning=deb
 ENV LIBCURL4_GNUTLS_DEV_VERSION=8.14.1-2+deb13u4
 # renovate: datasource=custom.debian depName=libexpat1-dev versioning=deb
-ENV LIBEXPAT1_DEV_VERSION=2.7.1-2
+ENV LIBEXPAT1_DEV_VERSION=2.8.2-1~deb13u1
 # renovate: datasource=custom.debian depName=libssl-dev versioning=deb
 ENV LIBSSL_DEV_VERSION=3.5.6-1~deb13u2
 # renovate: datasource=custom.debian depName=zlib1g-dev versioning=deb
