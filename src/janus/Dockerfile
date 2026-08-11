@@ -22,7 +22,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # --- APT helpers (build-stage only) --------------------------------------
 # Only gnupg is needed — curl + unzip are inherited from terra.
-# renovate: datasource=repology depName=debian_13/gnupg2 versioning=deb
+# renovate: datasource=custom.debian depName=gnupg versioning=deb
 ENV GNUPG_VERSION=2.4.7-21+deb13u1
 
 RUN apt-get update && \
