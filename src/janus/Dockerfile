@@ -54,7 +54,7 @@ RUN base="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}" && \
 
 # --- Packer --------------------------------------------------------------
 # renovate: datasource=github-tags depName=hashicorp/packer extractVersion=^v(?<version>.*)$
-ENV PACKER_VERSION=1.15.4
+ENV PACKER_VERSION=1.16.0
 
 RUN base="https://releases.hashicorp.com/packer/${PACKER_VERSION}" && \
     curl --proto '=https' -fsSL -o /tmp/packer.zip "${base}/packer_${PACKER_VERSION}_linux_amd64.zip" && \
