@@ -42,7 +42,11 @@
     {
       "description": "Group curl packages together",
       "matchDatasources": ["custom.debian"],
-      "matchPackageNames": ["curl", "libcurl3t64-gnutls", "libcurl4-gnutls-dev"],
+      "matchPackageNames": [
+        "curl",
+        "libcurl3t64-gnutls",
+        "libcurl4-gnutls-dev"
+      ],
       "groupName": "curl"
     },
     {
