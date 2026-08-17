@@ -80,7 +80,7 @@ RUN base="https://github.com/terraform-linters/tflint/releases/download/v${TFLIN
 
 # --- Helm ----------------------------------------------------------------
 # renovate: datasource=github-tags depName=helm/helm extractVersion=^v(?<version>.*)$
-ENV HELM_VERSION=4.2.3
+ENV HELM_VERSION=4.2.4
 
 RUN base="https://get.helm.sh" && \
     curl --proto '=https' -fsSL -o /tmp/helm.tar.gz \
