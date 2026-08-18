@@ -66,13 +66,21 @@ RUN renovate --help
 # post-install step didn't run (or the prebuilt binary doesn't match the
 # runtime), require() throws at load time and this test fails fast — with
 # a clearer signal than a buried Renovate startup error.
-# `re2` is a nested dep of renovate (not a top-level global), so NODE_PATH
-# must point at renovate's own node_modules — $(npm root -g) alone isn't
-# enough since Node's resolver doesn't descend into sibling packages.
+# `re2` is a nested dep of renovate (not a top-level global), so it has to be
+# resolved from inside renovate's own package. Don't assemble that path from
+# `$(npm root -g)` by hand: where npm places a global package underneath that
+# root is an implementation detail, and it changed in npm 12. Point NODE_PATH
+# at the global root so `renovate` itself resolves, then let Node walk up from
+# there to find `re2` the way it normally would.
 # hadolint ignore=DL3059
 RUN <<'EOF'
 set -euo pipefail
-NODE_PATH="$(npm root -g)/renovate/node_modules" node -e 'const RE2 = require("re2"); if (!new RE2("^\\d+$").test("42")) process.exit(1)'
+NODE_PATH="$(npm root -g)" node -e '
+  const path = require("path");
+  const renovateDir = path.dirname(require.resolve("renovate/package.json"));
+  const RE2 = require(require.resolve("re2", { paths: [renovateDir] }));
+  if (!new RE2("^\\d+$").test("42")) process.exit(1);
+'
 EOF
 
 # --- Inheritance: vulcan tools still work -------------------------------
