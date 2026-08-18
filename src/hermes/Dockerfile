@@ -30,11 +30,13 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
 # renovate: datasource=npm depName=renovate
 ENV RENOVATE_VERSION=44.32.2
 
-# Renovate. Scripts deliberately enabled (no `--ignore-scripts`) so the
-# `re2` post-install step can fetch its prebuilt native binary. Without RE2,
-# Renovate's regex managers fall back to V8's engine, which can hang on
-# adversarial patterns supplied through `renovate.json`.
-RUN npm install -g "renovate@${RENOVATE_VERSION}" && \
+# Renovate. `re2` fetches a prebuilt native binary from its install script, and
+# npm blocks lifecycle scripts unless allow-listed — on `npm rebuild` too, where
+# it exits 0 without doing anything. Without RE2, Renovate's regex managers fall
+# back silently to V8's engine, which can hang on adversarial patterns from
+# `renovate.json`, so the smoke test below is the guard, not the exit code.
+RUN npm install -g --ignore-scripts "renovate@${RENOVATE_VERSION}" && \
+    npm rebuild -g --allow-scripts=re2 re2 && \
     renovate --version && \
     rm -rf /root/.npm /tmp/node-compile-cache
 
@@ -62,17 +64,18 @@ RUN renovate --version
 RUN renovate --help
 
 # --- RE2 native module loads --------------------------------------------
-# Exercise RE2 directly to catch prebuilt-binary mismatches. If the `re2`
-# post-install step didn't run (or the prebuilt binary doesn't match the
-# runtime), require() throws at load time and this test fails fast — with
-# a clearer signal than a buried Renovate startup error.
-# `re2` is a nested dep of renovate (not a top-level global), so NODE_PATH
-# must point at renovate's own node_modules — $(npm root -g) alone isn't
-# enough since Node's resolver doesn't descend into sibling packages.
+# `re2` is a nested dep of renovate, so it is resolved from inside renovate's
+# package. Don't rebuild that path from `$(npm root -g)` by hand — npm's global
+# layout is an implementation detail and has already changed once.
 # hadolint ignore=DL3059
 RUN <<'EOF'
 set -euo pipefail
-NODE_PATH="$(npm root -g)/renovate/node_modules" node -e 'const RE2 = require("re2"); if (!new RE2("^\\d+$").test("42")) process.exit(1)'
+NODE_PATH="$(npm root -g)" node -e '
+  const path = require("path");
+  const renovateDir = path.dirname(require.resolve("renovate/package.json"));
+  const RE2 = require(require.resolve("re2", { paths: [renovateDir] }));
+  if (!new RE2("^\\d+$").test("42")) process.exit(1);
+'
 EOF
 
 # --- Inheritance: vulcan tools still work -------------------------------
