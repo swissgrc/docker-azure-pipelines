@@ -30,19 +30,11 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
 # renovate: datasource=npm depName=renovate
 ENV RENOVATE_VERSION=44.32.2
 
-# Renovate. Install with every lifecycle script blocked, then build exactly the
-# one that is actually needed: `re2` fetches a prebuilt native binary from its
-# install script. Without RE2, Renovate's regex managers fall back to V8's
-# engine, which can hang on adversarial patterns supplied through
-# `renovate.json` — and that fallback is silent, so the RE2 smoke test below is
-# what catches it.
-# Both flags are load-bearing. npm 12 blocks lifecycle scripts unless they are
-# allow-listed, and that applies to `npm rebuild` too — without --allow-scripts
-# the rebuild prints "rebuilt dependencies successfully", exits 0 and does
-# nothing, which is why the smoke test rather than the exit code is the guard
-# here. Naming re2 keeps the grant to a single package: the others npm would
-# otherwise run are not needed anyway, since `core-js-pure` wraps its postinstall
-# in try/catch and `dtrace-provider` falls back to `suppress-error.js`.
+# Renovate. `re2` fetches a prebuilt native binary from its install script, and
+# npm blocks lifecycle scripts unless allow-listed — on `npm rebuild` too, where
+# it exits 0 without doing anything. Without RE2, Renovate's regex managers fall
+# back silently to V8's engine, which can hang on adversarial patterns from
+# `renovate.json`, so the smoke test below is the guard, not the exit code.
 RUN npm install -g --ignore-scripts "renovate@${RENOVATE_VERSION}" && \
     npm rebuild -g --allow-scripts=re2 re2 && \
     renovate --version && \
@@ -72,16 +64,9 @@ RUN renovate --version
 RUN renovate --help
 
 # --- RE2 native module loads --------------------------------------------
-# Exercise RE2 directly to catch prebuilt-binary mismatches. If the `re2`
-# post-install step didn't run (or the prebuilt binary doesn't match the
-# runtime), require() throws at load time and this test fails fast — with
-# a clearer signal than a buried Renovate startup error.
-# `re2` is a nested dep of renovate (not a top-level global), so it has to be
-# resolved from inside renovate's own package. Don't assemble that path from
-# `$(npm root -g)` by hand: where npm places a global package underneath that
-# root is an implementation detail, and it changed in npm 12. Point NODE_PATH
-# at the global root so `renovate` itself resolves, then let Node walk up from
-# there to find `re2` the way it normally would.
+# `re2` is a nested dep of renovate, so it is resolved from inside renovate's
+# package. Don't rebuild that path from `$(npm root -g)` by hand — npm's global
+# layout is an implementation detail and has already changed once.
 # hadolint ignore=DL3059
 RUN <<'EOF'
 set -euo pipefail
