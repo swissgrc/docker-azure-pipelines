@@ -36,12 +36,15 @@ ENV RENOVATE_VERSION=44.32.2
 # engine, which can hang on adversarial patterns supplied through
 # `renovate.json` — and that fallback is silent, so the RE2 smoke test below is
 # what catches it.
-# `npm rebuild` is scoped to the named package, so nothing else in the tree gets
-# to execute code at install time. The two other scripts npm would otherwise run
-# are not needed anyway: `core-js-pure` wraps its postinstall in try/catch and
-# `dtrace-provider` falls back to `suppress-error.js`.
+# Both flags are load-bearing. npm 12 blocks lifecycle scripts unless they are
+# allow-listed, and that applies to `npm rebuild` too — without --allow-scripts
+# the rebuild prints "rebuilt dependencies successfully", exits 0 and does
+# nothing, which is why the smoke test rather than the exit code is the guard
+# here. Naming re2 keeps the grant to a single package: the others npm would
+# otherwise run are not needed anyway, since `core-js-pure` wraps its postinstall
+# in try/catch and `dtrace-provider` falls back to `suppress-error.js`.
 RUN npm install -g --ignore-scripts "renovate@${RENOVATE_VERSION}" && \
-    npm rebuild -g re2 && \
+    npm rebuild -g --allow-scripts=re2 re2 && \
     renovate --version && \
     rm -rf /root/.npm /tmp/node-compile-cache
 
