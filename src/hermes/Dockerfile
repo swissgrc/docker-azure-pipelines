@@ -30,11 +30,17 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
 # renovate: datasource=npm depName=renovate
 ENV RENOVATE_VERSION=44.32.2
 
-# Renovate. Scripts deliberately enabled (no `--ignore-scripts`) so the
-# `re2` post-install step can fetch its prebuilt native binary. Without RE2,
-# Renovate's regex managers fall back to V8's engine, which can hang on
-# adversarial patterns supplied through `renovate.json`.
-RUN npm install -g "renovate@${RENOVATE_VERSION}" && \
+# Renovate. `re2`'s install script is allowed explicitly so it can fetch its
+# prebuilt native binary. Without RE2, Renovate's regex managers fall back to
+# V8's engine, which can hang on adversarial patterns supplied through
+# `renovate.json` — and the fallback is silent, so the RE2 smoke test below is
+# what catches it.
+# npm 12 blocks dependency install scripts unless they are allow-listed, which
+# is why this is named rather than relying on the absence of `--ignore-scripts`.
+# The other two scripts npm reports as blocked stay blocked: `core-js-pure`
+# wraps its postinstall in try/catch and `dtrace-provider` falls back to
+# `suppress-error.js`, so neither is needed here.
+RUN npm install -g --allow-scripts=re2 "renovate@${RENOVATE_VERSION}" && \
     renovate --version && \
     rm -rf /root/.npm /tmp/node-compile-cache
 
