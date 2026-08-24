@@ -92,7 +92,7 @@ ENV AZURE_CLI_VERSION=2.89.1
 # dependency on ca-certificates-java populates Java's truststore, which jsign
 # needs for HTTPS calls to cloud KMS backends (e.g. Azure Key Vault).
 # renovate: datasource=custom.debian depName=openjdk-21-jre-headless versioning=deb
-ENV OPENJDK_VERSION=21.0.12+8-1~deb13u1
+ENV OPENJDK_VERSION=21.0.12.1+1-1~deb13u1
 
 # osslsigncode: independent Authenticode signature verification — jsign signs
 # but has no verify command of its own.
