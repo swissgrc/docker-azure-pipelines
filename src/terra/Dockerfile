@@ -196,7 +196,7 @@ ENV CURL_VERSION=8.14.1-2+deb13u4
 # renovate: datasource=custom.debian depName=libcurl3t64-gnutls versioning=deb
 ENV LIBCURL3_GNUTLS_VERSION=8.14.1-2+deb13u4
 # renovate: datasource=custom.debian depName=unzip versioning=deb
-ENV UNZIP_VERSION=6.0-29
+ENV UNZIP_VERSION=6.0-29+deb13u1
 
 # renovate: datasource=github-tags depName=docker/cli extractVersion=^v(?<version>.*)$
 ENV DOCKER_CLI_VERSION=29.7.2
