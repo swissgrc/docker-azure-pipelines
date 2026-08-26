@@ -80,7 +80,7 @@ ENV LIBCURL4_GNUTLS_DEV_VERSION=8.14.1-2+deb13u4
 # renovate: datasource=custom.debian depName=libexpat1-dev versioning=deb
 ENV LIBEXPAT1_DEV_VERSION=2.8.3-1~deb13u1
 # renovate: datasource=custom.debian depName=libssl-dev versioning=deb
-ENV LIBSSL_DEV_VERSION=3.5.6-1~deb13u2
+ENV LIBSSL_DEV_VERSION=3.5.7-1~deb13u2
 # renovate: datasource=custom.debian depName=zlib1g-dev versioning=deb
 ENV ZLIB1G_DEV_VERSION=1:1.3.dfsg+really1.3.1-1+b1
 
