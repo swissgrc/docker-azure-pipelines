@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.26
+# syntax=docker/dockerfile:1.27
 
 # ============================================================================
 # base - minimal runtime deps that need to exist in `final` too.
