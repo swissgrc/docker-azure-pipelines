@@ -76,7 +76,7 @@ ENV DH_AUTORECONF_VERSION=20
 # renovate: datasource=custom.debian depName=gettext versioning=deb
 ENV GETTEXT_VERSION=0.23.1-2
 # renovate: datasource=custom.debian depName=libcurl4-gnutls-dev versioning=deb
-ENV LIBCURL4_GNUTLS_DEV_VERSION=8.14.1-2+deb13u4
+ENV LIBCURL4_GNUTLS_DEV_VERSION=8.14.1-2+deb13u5
 # renovate: datasource=custom.debian depName=libexpat1-dev versioning=deb
 ENV LIBEXPAT1_DEV_VERSION=2.8.3-1~deb13u1
 # renovate: datasource=custom.debian depName=libssl-dev versioning=deb
@@ -194,7 +194,7 @@ ENV CURL_VERSION=8.14.1-2+deb13u4
 # trixie ships this as libcurl3t64-gnutls; the libcurl3-gnutls install name below
 # resolves via its versioned Provides, so we track the real (t64) binary here.
 # renovate: datasource=custom.debian depName=libcurl3t64-gnutls versioning=deb
-ENV LIBCURL3_GNUTLS_VERSION=8.14.1-2+deb13u4
+ENV LIBCURL3_GNUTLS_VERSION=8.14.1-2+deb13u5
 # renovate: datasource=custom.debian depName=unzip versioning=deb
 ENV UNZIP_VERSION=6.0-29+deb13u1
 
