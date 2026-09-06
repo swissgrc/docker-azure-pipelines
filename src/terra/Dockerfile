@@ -199,7 +199,7 @@ ENV LIBCURL3_GNUTLS_VERSION=8.14.1-2+deb13u4
 ENV UNZIP_VERSION=6.0-29+deb13u1
 
 # renovate: datasource=github-tags depName=docker/cli extractVersion=^v(?<version>.*)$
-ENV DOCKER_CLI_VERSION=29.7.2
+ENV DOCKER_CLI_VERSION=29.8.0
 # renovate: datasource=github-tags depName=docker/buildx extractVersion=^v(?<version>.*)$
 ENV DOCKER_BUILDX_VERSION=0.36.1
 # renovate: datasource=github-tags depName=docker/compose extractVersion=^v(?<version>.*)$
