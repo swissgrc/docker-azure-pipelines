@@ -28,7 +28,7 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
       org.opencontainers.image.documentation="https://github.com/swissgrc/docker-azure-pipelines"
 
 # renovate: datasource=npm depName=renovate
-ENV RENOVATE_VERSION=44.52.1
+ENV RENOVATE_VERSION=44.65.5
 
 # Renovate. `re2` fetches a prebuilt native binary from its install script, and
 # npm blocks lifecycle scripts unless allow-listed — on `npm rebuild` too, where
