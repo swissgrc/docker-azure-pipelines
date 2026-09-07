@@ -134,12 +134,17 @@ ENV NPM_VERSION=12.0.2
 # renovate: datasource=github-tags depName=yarnpkg/yarn extractVersion=^v(?<version>.*)$
 ENV YARN_VERSION=1.22.22
 # renovate: datasource=github-tags depName=pnpm/pnpm extractVersion=^v(?<version>.*)$
-ENV PNPM_VERSION=11.25.0
+ENV PNPM_VERSION=12.3.3
 
+# npm and yarn need no install scripts, so the global install keeps --ignore-scripts
+# pnpm >=12 is different: it ships its CLI as a native binary that its own install script
+# hard-links in from the @pnpm/exe.<platform> optional dep (into /usr/lib/node_modules/pnpm/pnpm).
+# So we re-run just pnpm's script with it allow-listed.
 RUN npm install -g --ignore-scripts \
         "npm@${NPM_VERSION}" \
         "yarn@${YARN_VERSION}" \
         "pnpm@${PNPM_VERSION}" && \
+    npm rebuild -g --allow-scripts=pnpm pnpm && \
     npm --version && \
     yarn --version && \
     pnpm --version && \
@@ -228,6 +233,19 @@ RUN uv run --no-project --python python3 python3 -c "import sys; assert sys.vers
 RUN yarn info lodash name
 # hadolint ignore=DL3059
 RUN pnpm info lodash name
+
+# --- Regression guard: pnpm must start via a raw execve, not only a shell ---
+# Azure DevOps' agent starts tools with .NET Process.Start, i.e. a raw
+# execve(2) with no shell fallback. pnpm >=12 ships its CLI as a native binary
+# that a lifecycle script installs on the fly; `npm install -g --ignore-scripts`
+# (in the final stage) skips that script, so `bin/pnpm` stays a *shebang-less*
+# placeholder. A shell still runs it (bash retries an ENOEXEC file via /bin/sh),
+# so the `pnpm --version` / `pnpm info` checks above pass even when the binary
+# is unrunnable — which is exactly how downstream pipelines broke ("Exec format
+# error"). Reproduce that launch path here so a non-runnable pnpm fails CI.
+# hadolint ignore=DL3059
+RUN pnpm_bin="$(command -v pnpm)" && \
+    python3 -c "import os, sys; os.execve(sys.argv[1], [sys.argv[1], '--version'], os.environ)" "$pnpm_bin"
 
 # --- Inheritance: every terra tool still works --------------------------
 # Condensed — full set proven by terra's test stage; here we prove inheritance,
