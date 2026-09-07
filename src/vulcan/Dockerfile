@@ -134,7 +134,7 @@ ENV NPM_VERSION=12.0.2
 # renovate: datasource=github-tags depName=yarnpkg/yarn extractVersion=^v(?<version>.*)$
 ENV YARN_VERSION=1.22.22
 # renovate: datasource=github-tags depName=pnpm/pnpm extractVersion=^v(?<version>.*)$
-ENV PNPM_VERSION=12.3.3
+ENV PNPM_VERSION=12.3.4
 
 # npm and yarn need no install scripts, so the global install keeps --ignore-scripts
 # pnpm >=12 is different: it ships its CLI as a native binary that its own install script
