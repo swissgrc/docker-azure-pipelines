@@ -108,7 +108,7 @@ RUN base="https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64" && \
 
 # --- kubelogin -----------------------------------------------------------
 # renovate: datasource=github-releases depName=Azure/kubelogin extractVersion=^v(?<version>.*)$
-ENV KUBELOGIN_VERSION=0.2.19
+ENV KUBELOGIN_VERSION=0.2.20
 
 RUN base="https://github.com/Azure/kubelogin/releases/download/v${KUBELOGIN_VERSION}" && \
     curl --proto '=https' -fsSL -o /tmp/kubelogin.zip "${base}/kubelogin-linux-amd64.zip" && \
