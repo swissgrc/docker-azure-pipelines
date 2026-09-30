@@ -67,7 +67,7 @@ RUN sha256_col=$(awk '$0=="SHA-256" {print NR; exit}' /tmp/yq-hashes-order) && \
 
 # --- Git from source ------------------------------------------------------
 # renovate: datasource=github-tags depName=git/git extractVersion=^v(?<version>.*)$
-ENV GIT_VERSION=2.55.0
+ENV GIT_VERSION=2.56.0
 
 # renovate: datasource=custom.debian depName=build-essential versioning=deb
 ENV BUILD_ESSENTIAL_VERSION=12.12
