@@ -119,6 +119,23 @@ RUN base="https://github.com/Azure/kubelogin/releases/download/v${KUBELOGIN_VERS
     /tmp/kubelogin --version && \
     rm /tmp/kubelogin.zip /tmp/kubelogin.zip.sha256
 
+# --- PowerShell 7 --------------------------------------------------------
+# renovate: datasource=github-releases depName=PowerShell/PowerShell extractVersion=^v(?<version>.*)$
+ENV POWERSHELL_VERSION=7.6.6
+
+RUN base="https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}" && \
+    curl --proto '=https' -fsSL -o /tmp/powershell.tar.gz \
+      "${base}/powershell-${POWERSHELL_VERSION}-linux-x64.tar.gz" && \
+    curl --proto '=https' -fsSL -o /tmp/powershell_hashes.sha256 "${base}/hashes.sha256" && \
+    expected_sha=$(iconv -f UTF-16 -t UTF-8 /tmp/powershell_hashes.sha256 | tr -d '\r' | \
+      grep -E '[[:space:]]\*?powershell-'"${POWERSHELL_VERSION}"'-linux-x64\.tar\.gz$' | awk '{print $1}') && \
+    echo "${expected_sha}  /tmp/powershell.tar.gz" | sha256sum -c - && \
+    mkdir -p /opt/microsoft/powershell/7 && \
+    tar -xzf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 && \
+    chmod +x /opt/microsoft/powershell/7/pwsh && \
+    POWERSHELL_TELEMETRY_OPTOUT=1 /opt/microsoft/powershell/7/pwsh --version && \
+    rm /tmp/powershell.tar.gz /tmp/powershell_hashes.sha256
+
 
 # ============================================================================
 # final - runtime image
@@ -158,6 +175,13 @@ COPY --from=build /tmp/helm      /usr/local/bin/helm
 COPY --from=build /tmp/kubectl   /usr/local/bin/kubectl
 COPY --from=build /tmp/kubelogin /usr/local/bin/kubelogin
 
+# PowerShell 7
+COPY --from=build /opt/microsoft/powershell/7 /opt/microsoft/powershell/7
+RUN ln -s /opt/microsoft/powershell/7/pwsh /usr/local/bin/pwsh
+
+ENV POWERSHELL_TELEMETRY_OPTOUT=1 \
+    POWERSHELL_UPDATECHECK=Off
+
 # SWA CLI
 RUN npm install -g --ignore-scripts \
         "@azure/static-web-apps-cli@${SWA_CLI_VERSION}" && \
@@ -167,6 +191,7 @@ RUN npm install -g --ignore-scripts \
 # Inline smoke tests + cleanup in one layer.
 # /root/.azure is created by `az --version` on first invocation.
 RUN az --version && \
+    pwsh --version && \
     terraform --version && \
     tflint --version && \
     packer --version && \
@@ -193,6 +218,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # --- janus's own tools ---------------------------------------------------
 # hadolint ignore=DL3059
 RUN az --version && \
+    pwsh --version && \
     terraform --version && \
     tflint --version && \
     packer --version && \
@@ -207,6 +233,10 @@ RUN az --version && \
 # that proves DNS + outbound networking + CLI initialization.
 # hadolint ignore=DL3059
 RUN az extension list-available --output table
+
+# --- PowerShell functional: pwsh drives az and parses its JSON ----------
+# hadolint ignore=DL3059,SC2016
+RUN pwsh -NoProfile -Command '$PSVersionTable.PSVersion; az version | ConvertFrom-Json | Select-Object -ExpandProperty azure-cli'
 
 # --- Terraform functional: inits and validates an empty config ----------
 # hadolint ignore=DL3059
