@@ -74,6 +74,7 @@ Deployment image for provisioning infrastructure and deploying to Azure / Kubern
 - Everything from `vulcan`
 - Azure CLI
 - Azure Static Web Apps CLI (`swa`)
+- PowerShell 7 (`pwsh`)
 - Terraform
 - tflint
 - Packer
