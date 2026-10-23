@@ -8,7 +8,7 @@ FROM debian:13.7-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d76
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # renovate: datasource=custom.debian depName=ca-certificates versioning=deb
-ENV CA_CERTIFICATES_VERSION=20250419
+ENV CA_CERTIFICATES_VERSION=20250419+deb13u1
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
