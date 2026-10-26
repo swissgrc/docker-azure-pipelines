@@ -121,7 +121,7 @@ RUN base="https://github.com/Azure/kubelogin/releases/download/v${KUBELOGIN_VERS
 
 # --- PowerShell 7 --------------------------------------------------------
 # renovate: datasource=github-releases depName=PowerShell/PowerShell extractVersion=^v(?<version>.*)$
-ENV POWERSHELL_VERSION=7.6.8
+ENV POWERSHELL_VERSION=7.6.9
 
 RUN base="https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}" && \
     curl --proto '=https' -fsSL -o /tmp/powershell.tar.gz \
