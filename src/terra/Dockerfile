@@ -3,7 +3,7 @@
 # ============================================================================
 # base - minimal runtime deps that need to exist in `final` too.
 # ============================================================================
-FROM debian:13.7-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS base
+FROM debian:13.7-slim@sha256:89c1ea91e897f0fe0a3731595330bc45b8bdef4047464a07116f891a94054b31 AS base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
