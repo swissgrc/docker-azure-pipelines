@@ -152,7 +152,7 @@ LABEL org.opencontainers.image.vendor="Swiss GRC AG" \
       org.opencontainers.image.documentation="https://github.com/swissgrc/docker-azure-pipelines"
 
 # renovate: datasource=github-tags depName=Azure/azure-cli extractVersion=^azure-cli-(?<version>.*)$
-ENV AZURE_CLI_VERSION=2.91.0
+ENV AZURE_CLI_VERSION=2.92.0
 
 # renovate: datasource=npm depName=@azure/static-web-apps-cli
 ENV SWA_CLI_VERSION=2.1.0
