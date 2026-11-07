@@ -82,7 +82,7 @@ ENV LIBEXPAT1_DEV_VERSION=2.9.0-1~deb13u1
 # renovate: datasource=custom.debian depName=libssl-dev versioning=deb
 ENV LIBSSL_DEV_VERSION=3.5.7-1~deb13u3
 # renovate: datasource=custom.debian depName=zlib1g-dev versioning=deb
-ENV ZLIB1G_DEV_VERSION=1:1.3.dfsg+really1.3.1-1+b1
+ENV ZLIB1G_DEV_VERSION=1:1.3.dfsg+really1.3.1-1+deb13u1
 
 # Install Git build dependencies
 RUN apt-get update && \
