@@ -203,7 +203,7 @@ ENV DOCKER_CLI_VERSION=29.9.3
 # renovate: datasource=github-tags depName=docker/buildx extractVersion=^v(?<version>.*)$
 ENV DOCKER_BUILDX_VERSION=0.38.1
 # renovate: datasource=github-tags depName=docker/compose extractVersion=^v(?<version>.*)$
-ENV DOCKER_COMPOSE_VERSION=5.7.0
+ENV DOCKER_COMPOSE_VERSION=5.7.1
 
 # Bring keyring + source list file in from `build`.
 COPY --from=build /etc/apt/keyrings/docker.gpg /etc/apt/keyrings/docker.gpg
