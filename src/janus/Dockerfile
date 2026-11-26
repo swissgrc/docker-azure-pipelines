@@ -54,7 +54,7 @@ RUN base="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}" && \
 
 # --- Packer --------------------------------------------------------------
 # renovate: datasource=github-tags depName=hashicorp/packer extractVersion=^v(?<version>.*)$
-ENV PACKER_VERSION=1.16.2
+ENV PACKER_VERSION=1.16.3
 
 RUN base="https://releases.hashicorp.com/packer/${PACKER_VERSION}" && \
     curl --proto '=https' -fsSL -o /tmp/packer.zip "${base}/packer_${PACKER_VERSION}_linux_amd64.zip" && \
@@ -95,7 +95,7 @@ RUN base="https://get.helm.sh" && \
 
 # --- kubectl -------------------------------------------------------------
 # renovate: datasource=github-tags depName=kubernetes/kubernetes extractVersion=^v(?<version>.*)$
-ENV KUBECTL_VERSION=1.37.2
+ENV KUBECTL_VERSION=1.37.3
 
 RUN base="https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64" && \
     curl --proto '=https' -fsSL -o /tmp/kubectl "${base}/kubectl" && \

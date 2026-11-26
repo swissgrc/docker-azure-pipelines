@@ -161,7 +161,7 @@ RUN GNUPGHOME="$(mktemp -d)" && export GNUPGHOME && \
 
 # --- Copilot CLI ----------------------------------------------------------
 # renovate: datasource=github-releases depName=github/copilot-cli extractVersion=^v(?<version>.*)$
-ENV COPILOT_VERSION=1.0.114
+ENV COPILOT_VERSION=1.0.116
 
 RUN base="https://github.com/github/copilot-cli/releases/download/v${COPILOT_VERSION}" && \
     curl --proto '=https' -fsSL -o /tmp/copilot.tar.gz "${base}/copilot-linux-x64.tar.gz" && \
@@ -199,9 +199,9 @@ ENV LIBCURL3_GNUTLS_VERSION=8.14.1-2+deb13u7
 ENV UNZIP_VERSION=6.0-29+deb13u1
 
 # renovate: datasource=github-tags depName=docker/cli extractVersion=^v(?<version>.*)$
-ENV DOCKER_CLI_VERSION=29.10.0
+ENV DOCKER_CLI_VERSION=29.10.1
 # renovate: datasource=github-tags depName=docker/buildx extractVersion=^v(?<version>.*)$
-ENV DOCKER_BUILDX_VERSION=0.39.0
+ENV DOCKER_BUILDX_VERSION=0.39.1
 # renovate: datasource=github-tags depName=docker/compose extractVersion=^v(?<version>.*)$
 ENV DOCKER_COMPOSE_VERSION=5.8.0
 
